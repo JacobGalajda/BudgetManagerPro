@@ -7,24 +7,24 @@ const Schema = mongoose.Schema;
 const UsersSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name field is required']
+        //required: [true, 'Name field is required']
     },
     email: {
         type: String,
-        required: [true, 'Email field is required']
+        //required: [true, 'Email field is required']
     },
     password: {
         type: String,
-        required: [true, 'Password field is required']
+        //required: [true, 'Password field is required']
     },
     created_at: {
         type: String,
-        required: true,
+        //required: true,
         default: Date.now
     },
     verified: {
         type: Boolean,
-        required: true,
+        //required: true,
         default: false
     }
 });
