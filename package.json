@@ -17,5 +17,9 @@
         "express": "^4.17.1",
         "mocha": "^8.2.0",
         "mongoose": "^5.10.9"
+    },
+
+    "engines": {
+        "node": "10.x"
     }
 }
