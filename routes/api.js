@@ -8,6 +8,8 @@ const router = express.Router();
 // import Users database model
 const Users = require('../models/users');
 
+
+
 // API endpoint - get list of all users
 router.get('/users', function(req, res) {
     Users.find({}).then(function(users) {
@@ -20,6 +22,7 @@ router.get('/users', function(req, res) {
 router.post('/users', function(req, res, next) {
     console.log(req.body)
 
+    
     Users.create(req.body).then(function(user) {
         res.send(user);
     }).catch(next);

@@ -32,8 +32,8 @@ mongoose.connection.on('error', function(error) {
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use('/api', require('./routes/api'))
+app.use('/api', require('./routes/api'));
+app.use('/auth', require('./routes/auth'));
 
 // Check production
 if (process.env.NODE_ENV === 'production') {
