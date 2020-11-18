@@ -7,7 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 //const router = require('./routes/index');
 // import config files
-const config = require('../config');
+const config = require('./config');
 
 // call express to create running app object
 const app = express();
