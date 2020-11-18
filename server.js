@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 //const router = require('./routes/index');
+// import config files
+const config = require('../config');
 
 // call express to create running app object
 const app = express();
@@ -15,6 +17,7 @@ const PORT = process.env.PORT || 3001;
 //const MONGODB_URI = "mongodb://localhost:27017/my_local_db";
 //const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/Test?retryWrites=true&w=majority";
 const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/cop4331?retryWrites=true&w=majority";
+// const MONGODB_URI = config.MONGODB_URI; Highly recommended change to secure mongoDB URI from hackers.
 
 // ES6 Promises  -- set global Promise ES6 object equal to Promise
 // gets rid of DepreciatedWarning for Promises when running test
