@@ -11,8 +11,8 @@ const Users = require('../models/users');
 // API endpoint to login and generate authentication
 
 router.post('/login', function(req, res) {
-    email = req.body.email;
-    password = req.body.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     if(email === undefined || password === undefined) {
         res.status(401).json({
