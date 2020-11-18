@@ -22,7 +22,9 @@ router.post('/login', function(req, res) {
             }
             let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
             res.json({
-                token: generatedToken
+                token: generatedToken,
+                id: result.id,
+                name: result.name
             });
         } else {
             res.status(401).json({
