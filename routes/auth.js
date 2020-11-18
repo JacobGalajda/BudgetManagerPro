@@ -10,31 +10,29 @@ const Users = require('../models/users');
 
 // API endpoint to login and generate authentication
 
-router.post('/login', function(req, res) {
+router.post('/login', function(req, res, next) {
     console.log(req.body);
-    //const {email, password} = req.body;
-    Users.findOne(req.body, function(err, result) {
-        if(!err && result !== null) {
+    console.log(req.body.email);
+    Users.find(req.body).then(function(user) {
+        if(res !== null) {
             let tokenData = {
-                id: result.id,
-                name: result.name,
-                email: result.email
+                id: res.id,
+                name: res.name,
+                email: res.email
             }
             let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
-            res.json({
+            res.send({
                 token: generatedToken,
-                id: result.id,
-                name: result.name
+                id: res.id,
+                name: res.name
             });
         } else {
-            res.status(401).json({
+            res.status(401).send({
                 success: false,
-                message: err || 'User does not exist.'
+                message: 'User does not exist.'
             })
         }
-    });
-
-    
+    }).catch(next);  
 });
 
 module.exports = router;
