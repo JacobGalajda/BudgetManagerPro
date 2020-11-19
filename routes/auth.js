@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 //var bcrypt = require('bcrypt'); encryption library if needed in the future
 
 const Users = require('../models/users');
-const users = require('../models/users');
 
 // API endpoint to login and generate authentication
 
@@ -23,7 +22,7 @@ router.post('/login', function(req, res, next) {
         });
     } else {
         Users.find(req.body).then(function(user) {
-            console.log(user.id); //THIS ALWAYS GIVES ME UNDEFINED
+            console.log(user.name); //THIS ALWAYS GIVES ME UNDEFINED
             res.send(user);
         }).catch(next);
     } 
