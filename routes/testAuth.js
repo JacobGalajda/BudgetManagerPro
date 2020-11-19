@@ -8,15 +8,12 @@ const jwt = require('jsonwebtoken');
 
 const Users = require('../models/users');
 
-// API endpoint - update user
-router.put('/users/:id', verifyToken, function(req, res) {
-    // find user document by id and update with request body
-    Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
-        // check if this works by finding User's unique _id and checking for update
-        Users.findOne({ _id: req.params.id }).then(function(user) {
-            // send update back to as response
-            res.send(user);
-        });
+// API endpoint - get list of all users
+router.get('/users', verifyToken, function(req, res) {
+    Users.find({}).then(function(users) {
+        //res.json(users);
+        console.log(users);
+        res.send(users);
     });
 });
 
@@ -35,7 +32,7 @@ function verifyToken(req, res, next) {
         jwt.verify(bearerToken, config.JWT_KEY, (err, authData) => {
             if(err) {
                 //Forbidden
-                res.sendstatus(403);
+                res.sendStatus(403);
             } else {
                 //Next middleware
                 next();
@@ -43,6 +40,8 @@ function verifyToken(req, res, next) {
         });
     } else {
         //Forbidden
-        res.sendstatus(403);
+        res.sendStatus(403);
     }
 }
+
+module.exports = router;
