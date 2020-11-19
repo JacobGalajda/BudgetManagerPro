@@ -21,9 +21,28 @@ router.post('/login', function(req, res, next) {
             message: "Email and/or password are invalid."
         });
     } else {
-        Users.find(req.body).then(function(user) {
-            console.log(user.name); //THIS ALWAYS GIVES ME UNDEFINED
-            res.send(user);
+        Users.find(req.body).then(function(users) {
+            Users.findOne(users.id).then(function(user) {
+                if(user !== null) {
+                    let tokenData = {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email
+                    }
+                    console.log(user);
+                    let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
+                    res.send({
+                        token: generatedToken,
+                        id: user.id,
+                        name: user.name
+                    });
+                } else {
+                    res.status(401).send({
+                        success: false,
+                        message: 'User does not exist.'
+                    })
+                }
+            });
         }).catch(next);
     } 
 });

@@ -14,6 +14,7 @@ const Users = require('../models/users');
 router.get('/users', function(req, res) {
     Users.find({}).then(function(users) {
         //res.json(users);
+        console.log(users);
         res.send(users);
     });
 });
