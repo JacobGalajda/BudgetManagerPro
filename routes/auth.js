@@ -4,7 +4,7 @@ const config = require('../config');
 
 const jwt = require('jsonwebtoken');
 
-//var bcrypt = require('bcrypt'); encryption library if needed in the future
+//var bcrypt = require('bcrypt'); //encryption library if needed in the future
 
 const Users = require('../models/users');
 
