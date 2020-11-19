@@ -22,27 +22,38 @@ router.post('/login', function(req, res, next) {
         });
     } else {
         Users.find(req.body).then(function(users) {
-            Users.findOne(users.id).then(function(user) {
-                if(user !== null) {
-                    let tokenData = {
-                        id: user.id,
-                        name: user.name,
-                        email: user.email
-                    }
+            if(users[0] === undefined) {
+                res.status(401).send({
+                    success: false,
+                    message: 'User does not exist.'
+                });
+            } else {
+                Users.findOne({_id: users[0].id}).then(function(user) {
                     console.log(user);
-                    let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
-                    res.send({
-                        token: generatedToken,
-                        id: user.id,
-                        name: user.name
-                    });
-                } else {
-                    res.status(401).send({
-                        success: false,
-                        message: 'User does not exist.'
-                    })
-                }
-            });
+                    if(user !== null) {
+                        let tokenData = {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email
+                        }
+                        console.log(user);
+                        let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
+                        res.send({
+                            success: true,
+                            message: "User found.",
+                            token: generatedToken,
+                            id: user.id,
+                            name: user.name
+                        });
+                    } else {
+                        res.status(401).send({
+                            success: false,
+                            message: 'User does not exist.'
+                        })
+                    }
+                });
+            }
+            
         }).catch(next);
     } 
 });
