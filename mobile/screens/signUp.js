@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ART
 } from "react-native";
 
 export default class Sign extends React.Component {
@@ -60,9 +61,6 @@ export default class Sign extends React.Component {
             onChangeText={text => this.setState({ password: text })}
           />
         </View>
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginText}>Sign Up!</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 50,
     color: "#fff",
-    marginTop: 180,
+    marginTop: 120,
     // marginBottom: 50,
     textAlign: "center",
     fontStyle: "italic"

@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Button
 } from "react-native";
+import Header from "../components/header";
 
 export default class Edit extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Account</Text>
+      <View>
+        <View style={styles.container}>
+          <Text style={styles.text}>Account</Text>
+        </View>
       </View>
     );
   }

@@ -4,16 +4,20 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ART
 } from "react-native";
 import Header from "../components/header";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Spending extends React.Component {
   render() {
     return (
       <View>
-        {/* <Header /> */}
-        <Text>Spending</Text>
+        <Header />
+        <View style={styles.container}>
+          <Text style={styles.head}>Current Monthly Spending</Text>
+        </View>
       </View>
     );
   }
@@ -21,9 +25,12 @@ export default class Spending extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 4,
-    backgroundColor: "#68A047",
+    marginTop: 30,
     alignItems: "center",
     justifyContent: "center"
+  },
+  head: {
+    fontWeight: "bold",
+    fontSize: 26
   }
 });

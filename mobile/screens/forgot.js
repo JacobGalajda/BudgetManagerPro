@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 50,
     color: "#fff",
-    marginTop: 180,
+    marginTop: 120,
     // marginBottom: 50,
     textAlign: "center",
     fontStyle: "italic"

@@ -1,22 +1,28 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from "react-native";
 import Header from "../components/header";
+import ExpenseItem from "./expenseItem";
+import AddExpense from "./addExpense";
 
-export default class Manage extends React.Component {
-  render() {
-    return (
-      <View>
-        {/* <Header /> */}
-        <Text>Manage</Text>
-      </View>
-    );
-  }
+export default function Manage() {
+  const [expenses, setExpense] = useState([{ text: "Netflix", key: "1" }]);
+  const pressHandler = key => {
+    setExpense(prevExpenses => {
+      return prevExpenses.filter(expense => expense.key != key);
+    });
+  };
+  return (
+    <View>
+      <Header />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

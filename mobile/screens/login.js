@@ -52,9 +52,9 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontWeight: "bold",
-    fontSize: 50,
+    fontSize: 45,
     color: "#fff",
-    marginTop: 130,
+    marginTop: 0,
     // marginBottom: 70,
     textAlign: "center",
     fontStyle: "italic"

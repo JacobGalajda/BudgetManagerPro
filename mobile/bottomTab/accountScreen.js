@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import Header from "../components/header";
 
 export default class Account extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Header />
         <View style={styles.header}></View>
         <Image
           style={styles.avatar}
@@ -27,7 +29,7 @@ export default class Account extends Component {
             <View style={styles.buttonContainer}>
               <Text>Address</Text>
             </View>
-            <View style={styles.buttonContainer}>
+            <View style={styles.buttonContainerPhone}>
               <Text>Phone</Text>
             </View>
           </View>
@@ -50,7 +52,8 @@ const styles = StyleSheet.create({
     margin: 20
   },
   boxText: {
-    fontSize: 15
+    fontSize: 15,
+    backgroundColor: "#fff"
   },
   header: {
     backgroundColor: "#68A047",
@@ -78,7 +81,8 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     alignItems: "center",
-    padding: 30
+
+    backgroundColor: "#fff"
   },
   name: {
     fontSize: 28,
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 16,
-    color: "#00BFFF",
+    backgroundColor: "#fff",
     marginTop: 10
   },
   description: {
@@ -103,6 +107,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: "#68A047"
+  },
+  buttonContainerPhone: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     width: 250,
     borderRadius: 30,
     backgroundColor: "#68A047"

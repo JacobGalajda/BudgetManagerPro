@@ -12,8 +12,10 @@ export default class Budget extends React.Component {
   render() {
     return (
       <View>
-        {/* <Header /> */}
-        <Text>Budget</Text>
+        <Header />
+        <View style={styles.container}>
+          <Text style={styles.head}>Current Monthly Budget</Text>
+        </View>
       </View>
     );
   }
@@ -21,9 +23,12 @@ export default class Budget extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 4,
-    backgroundColor: "#68A047",
+    marginTop: 10,
     alignItems: "center",
     justifyContent: "center"
+  },
+  head: {
+    fontWeight: "bold",
+    fontSize: 26
   }
 });
