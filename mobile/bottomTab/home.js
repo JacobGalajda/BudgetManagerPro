@@ -22,7 +22,7 @@ const Home = () => {
     var hours = new Date().getHours(); //Current Hours
     var min = new Date().getMinutes(); //Current Minutes
     var sec = new Date().getSeconds(); //Current Seconds
-    setCurrentDate(date + "/" + month + "/" + year + " ");
+    setCurrentDate(month + "/" + date + "/" + year + " ");
   }, []);
 
   return (

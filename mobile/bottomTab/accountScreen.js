@@ -21,7 +21,7 @@ export default class Account extends Component {
           </View>
           <View style={styles.bodyContent}>
             <View style={styles.buttonContainer}>
-              <Text>Name</Text>
+              <Text> Name </Text>
             </View>
             <View style={styles.buttonContainer}>
               <Text>Email</Text>

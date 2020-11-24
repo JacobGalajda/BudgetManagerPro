@@ -41,6 +41,7 @@ const chart_wh = 250;
 const series = [123, 321, 123, 789, 537];
 const sliceColor = ["#F44336", "#2196F3", "#FFEB3B", "#4CAF50", "#FF9800"];
 var total = 0;
+var name;
 
 function ProfileScreen({ navigation }) {
   return (
@@ -50,8 +51,18 @@ function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={() => {
-            alert("Logging Out");
-            navigation.navigate("Login");
+            Alert.alert(
+              "Log Out?",
+              "Are you sure you want to log out?",
+              [
+                {
+                  text: "No",
+                  onPress: () => console.log("No Pressed!")
+                },
+                { text: "Yes", onPress: () => navigation.navigate("Login") }
+              ],
+              { cancelable: false }
+            );
           }}
         >
           <Text style={styles.loginText}>Log Out</Text>
@@ -376,8 +387,18 @@ function LoginScreen({ navigation }) {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          navigation.navigate("MyTabs");
-          alert("Logging In");
+          Alert.alert(
+            "Signing In",
+            "Welcome!",
+            [
+              {
+                text: "Dont Sign in",
+                onPress: () => console.log("Cancel Pressed!")
+              },
+              { text: "OK", onPress: () => navigation.navigate("MyTabs") }
+            ],
+            { cancelable: false }
+          );
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
