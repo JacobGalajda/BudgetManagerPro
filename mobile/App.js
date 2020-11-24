@@ -377,35 +377,8 @@ function ForgotPassword({ navigation }) {
 
 function LoginScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <View>
-        <Login />
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-        <Text style={styles.forgot}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => {
-          Alert.alert(
-            "Signing In",
-            "Welcome!",
-            [
-              {
-                text: "Dont Sign in",
-                onPress: () => console.log("Cancel Pressed!")
-              },
-              { text: "OK", onPress: () => navigation.navigate("MyTabs") }
-            ],
-            { cancelable: false }
-          );
-        }}
-      >
-        <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-        <Text style={styles.SignUp}>Sign Up</Text>
-      </TouchableOpacity>
+    <View style={styles.container4}>
+      <Login />
     </View>
   );
 }
@@ -500,6 +473,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center"
+  },
+  container4: {
+    flex: 1,
+    paddingTop: 160,
+    backgroundColor: "#68A047",
+    justifyContent: "center"
   },
   budgetContainer: {
     flex: 1,

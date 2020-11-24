@@ -5,16 +5,40 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Button
+  Button,
+  Alert
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import SignUp from "./signUp";
+
+// l@gmail.com
+// 123
 
 export default class Login extends React.Component {
   state = {
     email: "",
     password: ""
+  };
+  login = async (email, pass) => {
+    let response = await fetch(
+      "https://budgetmanagerpro.herokuapp.com/auth/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: pass
+        })
+      }
+    );
+    let json = await response.json();
+    alert(json.success);
   };
   render() {
     return (
@@ -38,6 +62,35 @@ export default class Login extends React.Component {
             onChangeText={text => this.setState({ password: text })}
           />
         </View>
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+          <Text style={styles.forgot}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            Alert.alert(
+              "Signing In",
+              "Welcome!",
+              [
+                {
+                  text: "Dont Sign in",
+                  onPress: () => console.log(this.state.email)
+                },
+                {
+                  text: "OK",
+                  onPress: () =>
+                    this.login(this.state.email, this.state.password)
+                }
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <Text style={styles.loginText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.SignUp}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
     );
   }
