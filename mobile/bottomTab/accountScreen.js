@@ -14,23 +14,20 @@ export default class Account extends Component {
         />
         <View style={styles.body}>
           <View style={styles.boxSimple}>
-            <Text style={styles.boxText}>
-              Hello! My name is The Budget Master! Click me to edit the contents
-              of the description!
-            </Text>
+            <Text style={styles.boxText}></Text>
           </View>
           <View style={styles.bodyContent}>
             <View style={styles.buttonContainer}>
-              <Text> Name </Text>
+              <Text> [Name] </Text>
             </View>
             <View style={styles.buttonContainer}>
-              <Text>Email</Text>
+              <Text>[Email]</Text>
             </View>
             <View style={styles.buttonContainer}>
-              <Text>Address</Text>
+              <Text>[Address]</Text>
             </View>
             <View style={styles.buttonContainerPhone}>
-              <Text>Phone</Text>
+              <Text>[Phone]</Text>
             </View>
           </View>
         </View>

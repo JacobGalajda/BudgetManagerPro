@@ -32,9 +32,9 @@ const Home = () => {
         <Text style={styles.Welcome}> Welcome Back</Text>
         <Text style={styles.textStyle}>Todays date is {currentDate}</Text>
         <Text style={styles.Current}>Current Monthly Budget: </Text>
-        <Text style={styles.Budget}>$4,000</Text>
-        <Text style={styles.Current}>Current Daily Budget: </Text>
-        <Text style={styles.daily}>$133</Text>
+        <Text style={styles.Budget}>[monthly budget]</Text>
+        <Text style={styles.Current}>Current Weekly Budget: </Text>
+        <Text style={styles.daily}>[weekly budget]</Text>
         <VictoryPie
           height={350}
           colorScale={[

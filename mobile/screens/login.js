@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
-  Alert
+  Alert,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -22,7 +22,7 @@ export default class Login extends React.Component {
     email: "",
     password: ""
   };
-  login = async (email, pass) => {
+  signin = async (email, pass) => {
     let response = await fetch(
       "https://budgetmanagerpro.herokuapp.com/auth/login",
       {
@@ -79,7 +79,7 @@ export default class Login extends React.Component {
                 {
                   text: "OK",
                   onPress: () =>
-                    this.login(this.state.email, this.state.password)
+                    this.signin(this.state.email, this.state.password)
                 }
               ],
               { cancelable: false }
@@ -98,7 +98,6 @@ export default class Login extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 4,
     backgroundColor: "#68A047",
     alignItems: "center",
     justifyContent: "center"
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
     color: "#fff",
     marginTop: 0,
-    // marginBottom: 70,
+
     textAlign: "center",
     fontStyle: "italic"
   },

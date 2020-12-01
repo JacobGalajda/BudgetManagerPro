@@ -1,3 +1,5 @@
+// Line 394 needs to be changed back to initial route "Login" instead of "MyTabs"
+
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -13,7 +15,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Ionicons";
-import Login from "./screens/login";
+// import Login from "./screens/login";
 import Sign from "./screens/signUp";
 import Home from "./bottomTab/home";
 import Account from "./bottomTab/accountScreen";
@@ -42,6 +44,94 @@ const series = [123, 321, 123, 789, 537];
 const sliceColor = ["#F44336", "#2196F3", "#FFEB3B", "#4CAF50", "#FF9800"];
 var total = 0;
 var name;
+
+class Login extends React.Component {
+  state = {
+    email: "",
+    password: ""
+  };
+  signin = async (email, pass) => {
+    let response = await fetch(
+      "https://budgetmanagerpro.herokuapp.com/auth/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: pass
+        })
+      }
+    );
+    let json = await response.json();
+    alert(json.success);
+
+    return json.success;
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.logo}>Budget Manager</Text>
+        <Text style={styles.logo2}>Pro</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ email: text })}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ password: text })}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("ForgotPassword")}
+        >
+          <Text style={styles.forgot}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            Alert.alert(
+              "Signing In",
+              "Welcome!",
+              [
+                {
+                  text: "Dont Sign in",
+                  onPress: () => console.log(this.state.email)
+                },
+                {
+                  text: "OK",
+                  onPress: () => {
+                    this.signin(this.state.email, this.state.password);
+                    this.props.navigation.navigate("MyTabs");
+                  }
+                }
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <Text style={styles.loginText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("SignUp")}
+        >
+          <Text style={styles.SignUp}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
 function ProfileScreen({ navigation }) {
   return (
@@ -86,29 +176,29 @@ function BudgetScreen({ navigation }) {
           >
             <Text style={styles.bugdetButton}>View Previous Budgets</Text>
           </TouchableOpacity>
-          <VictoryChart>
-            <VictoryLine
-              style={{
-                data: { stroke: "#c43a31" }
-              }}
-              data={[
-                { x: 1, y: 2 },
-                { x: 2, y: 3 },
-                { x: 3, y: 5 },
-                { x: 4, y: 4 },
-                { x: 5, y: 6 }
-              ]}
-            />
+          <VictoryChart height={500}>
             <VictoryLine
               style={{
                 data: { stroke: "#68A047" }
               }}
               data={[
-                { x: 1, y: 4 },
-                { x: 2, y: 5 },
-                { x: 3, y: 6 },
-                { x: 4, y: 5 },
-                { x: 5, y: 7 }
+                { x: "August", y: 3250 },
+                { x: "July", y: 1540 },
+                { x: "September", y: 1890 },
+                { x: "November", y: 4260 },
+                { x: "December", y: 3540 }
+              ]}
+            />
+            <VictoryLine
+              style={{
+                data: { stroke: "#c43a31" }
+              }}
+              data={[
+                { x: "August", y: 3250 },
+                { x: "July", y: 4210 },
+                { x: "September", y: 4020 },
+                { x: "November", y: 3223 },
+                { x: "December", y: 1232 }
               ]}
             />
           </VictoryChart>
@@ -123,7 +213,7 @@ function BudgetScreen({ navigation }) {
           { label: "1 Year", value: "rent" },
           { label: "2 Years", value: "rent" }
         ]}
-        placeholder="Expense Category"
+        placeholder="Duration"
         containerStyle={{ height: 40 }}
         style={{ color: "#68A047" }}
         dropDownStyle={{ backgroundColor: "#fafafa" }}
@@ -265,16 +355,6 @@ function SpendingScreen({ navigation }) {
   );
 }
 
-const drawer = createDrawerNavigator();
-
-function Drawer() {
-  return (
-    <drawer.Navigator initialRouteName="">
-      <drawer.Screen name="Return" component={ProfileScreen} />
-    </drawer.Navigator>
-  );
-}
-
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -325,7 +405,7 @@ function MyTabs() {
           headerShown: false
         }}
       />
-      <Tab.Screen name="Profile" component={Drawer} headerMode="none" />
+      <Tab.Screen name="Profile" component={ProfileScreen} headerMode="none" />
     </Tab.Navigator>
   );
 }
@@ -375,24 +455,105 @@ function ForgotPassword({ navigation }) {
   );
 }
 
-function LoginScreen({ navigation }) {
-  return (
-    <View style={styles.container4}>
-      <Login />
-    </View>
-  );
+// function LoginScreen({ navigation }) {
+// var login;
+
+// login = async (email, pass) => {
+//   let response = await fetch(
+//     "https://budgetmanagerpro.herokuapp.com/auth/login",
+//     {
+//       method: "POST",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify({
+//         email: email,
+//         password: pass
+//       })
+//     }
+//   );
+//   let json = await response.json();
+//   alert(json.success);
+// };
+
+// return (
+//   <View style={styles.container4}>
+//     <Login />
+
+{
+  /* <View style={styles.container}>
+        <Text style={styles.logo}>Budget Manager</Text>
+        <Text style={styles.logo2}>Pro</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ email: text })}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ password: text })}
+          />
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+          <Text style={styles.forgot}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            Alert.alert(
+              "Signing In",
+              "Welcome!",
+              [
+                {
+                  text: "Dont Sign in",
+                  onPress: () => console.log(this.state.email)
+                },
+                {
+                  text: "OK",
+                  onPress: () => login(this.state.email, this.state.password)
+                }
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <Text style={styles.loginText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.SignUp}>Sign Up</Text>
+        </TouchableOpacity>
+      </View> */
 }
+//     </View>
+//   );
+// }
 
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
+
   render() {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen
             name="Login"
-            component={LoginScreen}
+            component={Login}
             options={{
               headerShown: false,
               title: "LogIn",
@@ -561,5 +722,59 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 30,
     backgroundColor: "#68A047"
+  },
+  logo: {
+    fontWeight: "bold",
+    fontSize: 45,
+    color: "#fff",
+    marginTop: 0,
+
+    textAlign: "center",
+    fontStyle: "italic"
+  },
+  logo2: {
+    fontWeight: "bold",
+    fontSize: 50,
+    color: "#000",
+    // marginTop: 180,
+    marginBottom: 70,
+    textAlign: "center",
+    fontStyle: "italic"
+  },
+  inputView: {
+    width: "80%",
+    backgroundColor: "#fff",
+    borderRadius: 25,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: "center",
+    padding: 20
+  },
+  inputText: {
+    height: 50,
+    color: "black"
+  },
+  forgot: {
+    color: "white",
+    fontSize: 11,
+    textDecorationLine: "underline"
+  },
+  loginBtn: {
+    width: "80%",
+    backgroundColor: "#000",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10
+  },
+  loginText: {
+    color: "white"
+  },
+  SignUp: {
+    color: "white",
+    textDecorationLine: "underline",
+    marginBottom: 300
   }
 });
