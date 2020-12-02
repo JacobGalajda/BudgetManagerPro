@@ -2,29 +2,41 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// import budget object so user can create schema
+const Budget = require('../models/budget');
+
 // create schema and model
 // pass in object with different properties and their data types
 const UsersSchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Name field is required']
+        //required: [true, 'Name field is required']
     },
     email: {
         type: String,
-        required: [true, 'Email field is required']
+        //required: [true, 'Email field is required']
     },
     password: {
         type: String,
-        required: [true, 'Password field is required']
+        //required: [true, 'Password field is required']
+    },
+    email_token: {
+        type: String,
+        default: ''
+            //required: [true, 'Password field is required']
+    },
+    user_budgets: {
+        type: [Budget.schema],
+        default: []
     },
     created_at: {
         type: String,
-        required: true,
+        //required: true,
         default: Date.now
     },
     verified: {
         type: Boolean,
-        required: true,
+        //required: true,
         default: false
     }
 });
