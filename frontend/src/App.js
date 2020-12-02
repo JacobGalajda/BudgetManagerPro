@@ -14,17 +14,17 @@ function App() {
 
         <h6>A place to organize finances to ensure that they are within their financial scopes.</h6>
         <div className="white-box">
-            <form className="box" action="budgetHome.html" method="post">
+            <form className="box" action="" method="post">
               <p id="loginResult"></p>
             
               <input type="text" id="loginName" placeholder="email"></input>
               <input type="password" id="loginPassword" placeholder="Password"></input>
             
-              <a href="forgottenPassword.html">Forgot password...</a>
+              <a href>Forgot password...</a>
               <br></br>
-              <a href="BudgetSignup.html">Sign up</a>
+              <a href>Sign up</a>
 
-              <button id="loginButton" onclick="return doLogin();">Login</button>
+              <button id="loginButton" onclick="return alert('WOOOHOOO');">Login</button>
             </form>
         </div>
         </body>
