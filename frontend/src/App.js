@@ -14,7 +14,7 @@ function App() {
 
         <h6>A place to organize finances to ensure that they are within their financial scopes.</h6>
         <div className="white-box">
-            <form className="box" action="" method="post">
+            <form className="box">
               <p id="loginResult"></p>
             
               <input type="text" id="loginName" placeholder="email"></input>
@@ -24,7 +24,7 @@ function App() {
               <br></br>
               <a href>Sign up</a>
 
-              <button id="loginButton" onclick="return alert('WOOOHOOO');">Login</button>
+              <button id="loginButton" onclick="alert('WOOOHOOO');">Login</button>
             </form>
         </div>
         </body>
