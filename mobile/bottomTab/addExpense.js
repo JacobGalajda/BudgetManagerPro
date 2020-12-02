@@ -5,7 +5,7 @@ import { Checkbox } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AddExpense({ submitHandler }) {
-  const [text, setText] = useState("");
+  const [expenseName, setExpenseName] = useState("");
   const [price, setPrice] = useState("");
   const [checked, setChecked] = useState(false);
   const [date, setDate] = useState(new Date(1598051730000));
@@ -32,7 +32,7 @@ export default function AddExpense({ submitHandler }) {
   };
 
   const changeHandler = val => {
-    setText(val);
+    setExpenseName(val);
     setPrice(val);
   };
 
@@ -102,7 +102,7 @@ export default function AddExpense({ submitHandler }) {
 
       <Button
         onPress={() => {
-          submitHandler(text, price);
+          submitHandler(expenseName);
         }}
         title="add to budget"
         color="#68A047"

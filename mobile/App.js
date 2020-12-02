@@ -16,7 +16,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Ionicons";
 // import Login from "./screens/login";
-import Sign from "./screens/signUp";
 import Home from "./bottomTab/home";
 import Account from "./bottomTab/accountScreen";
 import Budget from "./bottomTab/budget";
@@ -45,36 +44,88 @@ const sliceColor = ["#F44336", "#2196F3", "#FFEB3B", "#4CAF50", "#FF9800"];
 var total = 0;
 var name;
 
+class Sign extends React.Component {
+  state = {
+    email: "",
+    phone: "",
+    userName: "",
+    password: "",
+    confirmPassword: ""
+  };
+  render() {
+    return (
+      <View style={styles.SignUpcontainer}>
+        <Text style={styles.logo}>Budget Manager</Text>
+        <Text style={styles.logo2}>Pro</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ email: text })}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Phone"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ phone: text })}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="UserName"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ userName: text })}
+          />
+        </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ password: text })}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Confirm Password"
+            placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ confirmPassword: text })}
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            this.props.navigation.navigate("Login");
+            Alert.alert("Yay!", "You've Signed Up!");
+          }}
+        >
+          <Text style={styles.SignUp2}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+      // </View>
+      // </View>
+    );
+  }
+}
+
 class Login extends React.Component {
   state = {
     email: "",
     password: ""
   };
-  signin = async (email, pass) => {
-    let response = await fetch(
-      "https://budgetmanagerpro.herokuapp.com/auth/login",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: pass
-        })
-      }
-    );
-    let json = await response.json();
-    alert(json.success);
-
-    return json.success;
-  };
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.logo}>Budget Manager</Text>
+      <View style={styles.LoginContainer}>
+        <Text style={styles.LoginLogo}>Budget Manager</Text>
         <Text style={styles.logo2}>Pro</Text>
         <View style={styles.inputView}>
           <TextInput
@@ -100,25 +151,35 @@ class Login extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.loginBtn}
-          onPress={() => {
-            Alert.alert(
-              "Signing In",
-              "Welcome!",
-              [
-                {
-                  text: "Dont Sign in",
-                  onPress: () => console.log(this.state.email)
+          onPress={async () => {
+            let response = await fetch(
+              "https://budgetmanagerpro.herokuapp.com/auth/login",
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json"
                 },
-                {
-                  text: "OK",
-                  onPress: () => {
-                    this.signin(this.state.email, this.state.password);
-                    this.props.navigation.navigate("MyTabs");
-                  }
-                }
-              ],
-              { cancelable: false }
+                body: JSON.stringify({
+                  email: this.state.email,
+                  password: this.state.password
+                })
+              }
             );
+            let user = await response.json();
+            console.log(user.success);
+
+            if (user.success) {
+              this.props.navigation.navigate("MyTabs", {
+                paramKey: user
+              });
+            } else {
+              Alert.alert("Error!", "Email or Password is Incorrect", [
+                {
+                  text: "Try again"
+                }
+              ]);
+            }
           }}
         >
           <Text style={styles.loginText}>LOGIN</Text>
@@ -355,7 +416,8 @@ function SpendingScreen({ navigation }) {
   );
 }
 
-function MyTabs() {
+function MyTabs({ route }) {
+  console.log(route.params.paramKey);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -410,26 +472,7 @@ function MyTabs() {
   );
 }
 
-function SignUpScreen({ navigation }) {
-  return (
-    <View style={styles.container1}>
-      <Sign />
-      <View style={styles.signUpButton}>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => {
-            navigation.navigate("MyTabs");
-            alert("Signed Up!");
-          }}
-        >
-          <Text style={styles.loginText}>Sign Up!</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
-function homeScreen({ navigation }) {
+function homeScreen({ navigation, route }) {
   return (
     <View>
       <View>
@@ -569,7 +612,7 @@ export default class App extends React.Component {
           />
           <Stack.Screen
             name="SignUp"
-            component={SignUpScreen}
+            component={Sign}
             options={{
               title: "",
               fontSize: 35,
@@ -614,6 +657,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#68A047",
     justifyContent: "center",
     alignItems: "center"
+  },
+  SignUpcontainer: {
+    // flex: 4,
+    backgroundColor: "#68A047",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 100
+  },
+  LoginContainer: {
+    flex: 1,
+    backgroundColor: "#68A047",
+    alignItems: "center",
+    justifyContent: "center"
   },
   container1: {
     flex: 1,
@@ -712,6 +768,11 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline"
     // marginBottom: 300
   },
+  SignUp2: {
+    color: "white"
+    // textDecorationLine: "underline"
+    // marginBottom: 300
+  },
   buttonContainer: {
     marginTop: 10,
     height: 45,
@@ -723,11 +784,19 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#68A047"
   },
+  LoginLogo: {
+    fontWeight: "bold",
+    fontSize: 45,
+    color: "#fff",
+    marginTop: 140,
+    textAlign: "center",
+    fontStyle: "italic"
+  },
   logo: {
     fontWeight: "bold",
     fontSize: 45,
     color: "#fff",
-    marginTop: 0,
+    marginTop: 100,
 
     textAlign: "center",
     fontStyle: "italic"
