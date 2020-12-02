@@ -1,6 +1,28 @@
+//https://www.youtube.com/watch?v=kjKR0q8EBKE&list=PL48XNXWziP9Jbw4suw75_aDFC6dp_4-j8&index=17
+
 // models/Users.js
 const mongoose = require('mongoose');
+
+// set port and mongoDB url (local or global)
+//const PORT = process.env.PORT || 3001;
+//const MONGODB_URI = "mongodb://localhost:27017/my_local_db";
+//const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/Test?retryWrites=true&w=majority";
+const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/cop4331?retryWrites=true&w=majority";
+
+// ES6 Promises  -- set global Promise ES6 object equal to Promise
+// gets rid of DepreciatedWarning for Promises when running test
+//mongoose.Promise = global.Promise;
+
 const Schema = mongoose.Schema;
+
+// connect to mongoDB with log messages for successful/unsuccessful connection
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useFindAndModify: false });
+mongoose.connection.once('open', function() {
+    console.log('Connected to the Database.');
+});
+mongoose.connection.on('error', function(error) {
+    console.log('Mongoose Connection Error : ' + error);
+});
 
 // create schema and model for expenses (nested in budget)
 const ExpenseSchema = new Schema({
@@ -133,22 +155,95 @@ const BudgetSchema = new Schema({
         default: false
     },
     shared_id: {
-<<<<<<< HEAD
         //type: Number,
         type: String,
         default: '0'
-=======
-        type: Number,
-        default: 0
->>>>>>> dd737c4148eef450b3353c7345e77be41fc096ed
     },
     budget_expense: [ExpenseSchema],
     budget_income: [IncomeSchema],
     budget_goal: [GoalSchema]
 });
 
+// import budget object so user can create schema
+//const Budget = require('../models/budget');
+
+// create schema and model
+// pass in object with different properties and their data types
+const UsersSchema = new Schema({
+    name: {
+        type: String,
+        //required: [true, 'Name field is required']
+    },
+    email: {
+        type: String,
+        //required: [true, 'Email field is required']
+    },
+    password: {
+        type: String,
+        //required: [true, 'Password field is required']
+    },
+    user_budgets: {
+        //type: [Budget.schema],
+        type: [BudgetSchema],
+        default: []
+    },
+    created_at: {
+        type: String,
+        //required: true,
+        default: Date.now
+    },
+    verified: {
+        type: Boolean,
+        //required: true,
+        default: false
+    }
+});
+
+// create new collection modelled after UserSchema
+// used as model anytime a new user is created
+//const Users = mongoose.model('Users', UsersSchema);
+
+// export so you can use in app
+//module.exports = Users;
+module.exports = mongoose.model('Users', UsersSchema);
 // export models for budget schema
 module.exports = mongoose.model('Budget', BudgetSchema);
-//module.exports = mongoose.model('Expense', ExpenseSchema);
-//module.exports = mongoose.model('Income', IncomeSchema);
-//module.exports = mongoose.model('Goal', GoalSchema);
+//
+
+
+
+
+// create a new user object based on Budget model
+newBudget = new Budget({
+    budget_name: 'test_budget_1',
+    budget_final_date: '2020-12-31T01:46:20.000+00:00',
+    //budget_expense: [{}],
+    //budget_income: [{}],
+    //budget_goal: [{}]
+
+    budget_expense: [{
+        expense_name: 'expense_1',
+        expense_cost: 10.00
+    }],
+    budget_income: [{
+        income_name: 'income_1',
+        income_amount: 15.00
+    }],
+    budget_goal: [{
+        goal_name: 'goal_1',
+        goal_amount: 20.00,
+        goal_cateogory: 'personal goal category',
+        goal_date: '2020-12-01T01:46:20.000+00:00'
+    }]
+});
+
+newUser = new UsersSchema({
+    name: 'Ima FindBudgetTest',
+    email: 'find_budget_test1.edu',
+    password: '123'
+});
+
+// add new budget to new user's budget array
+newUser.user_budgets.push(newBudget);
+
+newUser.save((err, data) => {});

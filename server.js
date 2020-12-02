@@ -15,9 +15,15 @@ const app = express();
 // set port and mongoDB url (local or global)
 const PORT = process.env.PORT || 3001;
 //const MONGODB_URI = "mongodb://localhost:27017/my_local_db";
+<<<<<<< HEAD
+//const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/test?retryWrites=true&w=majority";
+//const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/cop4331?retryWrites=true&w=majority";
+const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/dev?retryWrites=true&w=majority";
+=======
 //const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/Test?retryWrites=true&w=majority";
 const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/cop4331?retryWrites=true&w=majority";
 // const MONGODB_URI = config.MONGODB_URI; Highly recommended change to secure mongoDB URI from hackers.
+>>>>>>> dd737c4148eef450b3353c7345e77be41fc096ed
 
 // ES6 Promises  -- set global Promise ES6 object equal to Promise
 // gets rid of DepreciatedWarning for Promises when running test
@@ -43,7 +49,7 @@ app.use('/testAuth', require('./routes/testAuth'));
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'))
 
-    app.get('*', function (req, res) {
+    app.get('*', function(req, res) {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
 }
