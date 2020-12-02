@@ -33,41 +33,63 @@ router.get('/users', function(req, res) {
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {
     Users.create(req.body).then(function(user) {
-        res.send(user);
+        const emailToken = crypto.randomBytes(64).toString('hex');
+        const msg = {
+            to: req.body.email,
+            from: 'noreply@email.com',
+            subject: 'Budget Manager Pro - Verify your account',
+            text: `
+            Hello, thanks for registering on our website.
+            Please copy and paste the address below to verify your account.
+            http://${req.headers.host}/verify-email?token=${emailToken}
+            `,
+            html: `
+            <h1> Hello,</h1>
+            <p>Thanks for registering on our website,</p>
+            <p>Please click the link below to verify your account.</p>
+            <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
+            `
+        };
+        try {
+            await sgMail.send(msg);
+            res.send({
+                success: true,
+                message: 'Thank you for registering. Please check your email to verify your account.'             
+            });
+            //res.redirect('/');
+        } catch(error) {
+            console.log(error);
+            res.status(401).send({
+                success: false,
+                message: 'Something went wrong. Please contact us at noreply@email.com'
+            });
+        }
     }).catch(next);
-
-
-    const emailToken = crypto.randomBytes(64).toString('hex');
-    const msg = {
-        to: req.body.email,
-        from: 'noreply@email.com',
-        subject: 'Budget Manager Pro - Verify your account',
-        text: `
-        Hello, thanks for registering on our website.
-        Please copy and paste the address below to verify your account.
-        http://${req.headers.host}/verify-email?token=${emailToken}
-        `,
-        html: `
-        <h1> Hello,</h1>
-        <p>Thanks for registering on our website,</p>
-        <p>Please click the link below to verify your account.</p>
-        <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
-        `
-    };
-    try {
-        await sgMail.send(msg);
-        req.flash('success', 'Thanks for registering. Please check you email to verify your account.');
-        res.redirect('/');
-    } catch(error) {
-        console.log(error);
-        req.flash('error', 'Something went wrong. Please contact us at noreply@email.com');
-    }
 });
 
 // Email verification route
-router.get('/verify-email', async(req, res, next) => {
+router.get('/verify-email', async (req, res, next) => {
     try {
         const user = await Users.findOne({emailToken: req.query.token});
+        if (!user) {
+            res.status(401).send({
+                success: false,
+                message: "Token is invalid. Please contact us for assistance."
+            });
+        }
+        user.emailToken = null;
+        user.verified = true;
+        await user.save();
+        res.send({
+            success: true,
+            message: "User verified."
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(401).send({
+            success: false,
+            message: "Verification failed. Please contact us for assistance."
+        });
     }
 });
 
