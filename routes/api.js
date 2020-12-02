@@ -33,7 +33,7 @@ router.get('/users', function(req, res) {
 
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {
-    Users.create(req.body).then(function(user) {
+    Users.create(req.body).then(async function(user) {
         const emailToken = crypto.randomBytes(64).toString('hex');
         const msg = {
             to: req.body.email,
