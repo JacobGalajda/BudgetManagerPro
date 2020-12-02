@@ -37,7 +37,7 @@ router.post('/users', async function(req, res, next) {
         const emailToken = crypto.randomBytes(64).toString('hex');
         const msg = {
             to: req.body.email,
-            from: 'noreply@email.com',
+            from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: `
             Hello, thanks for registering on our website.
@@ -57,7 +57,6 @@ router.post('/users', async function(req, res, next) {
                 success: true,
                 message: 'Thank you for registering. Please check your email to verify your account.'             
             });
-            //res.redirect('/');
         } catch(error) {
             console.log(error);
             res.status(401).send({

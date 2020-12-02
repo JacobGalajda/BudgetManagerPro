@@ -133,14 +133,8 @@ const BudgetSchema = new Schema({
         default: false
     },
     shared_id: {
-<<<<<<< HEAD
-        //type: Number,
-        type: String,
-        default: '0'
-=======
         type: Number,
         default: 0
->>>>>>> dd737c4148eef450b3353c7345e77be41fc096ed
     },
     budget_expense: [ExpenseSchema],
     budget_income: [IncomeSchema],
