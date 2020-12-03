@@ -7,7 +7,8 @@ const config = require('../config');
 
 //require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('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');
+const API_KEY = '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';
+sgMail.setApiKey(API_KEY);
 
 //require crypto
 const crypto = require('crypto');
@@ -31,6 +32,21 @@ router.get('/users', function(req, res) {
     });
 });
 
+router.post('/test', async (req, res) => {
+    const msg = {
+        to: 'luizgustavorocco@gmail.com',
+        from: 'budgetmanagerproapp@gmail.com',
+        subject: 'test',
+        text: "TESTING."
+    }
+    try {
+        await sgMail.send(msg).then((response) => console.log(response));
+        res.send({ text: "OK."});
+    } catch(error) {
+        console.log(error);
+    }
+});
+
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {
     Users.create(req.body).then(async function(user) {
@@ -39,20 +55,24 @@ router.post('/users', async function(req, res, next) {
             to: 'luizgustavorocco@hotmail.com',
             from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
-            text: `
-            Hello, thanks for registering on our website.
-            Please copy and paste the address below to verify your account.
-            http://${req.headers.host}/verify-email?token=${emailToken}
-            `,
-            html: `
-            <h1> Hello,</h1>
-            <p>Thanks for registering on our website,</p>
-            <p>Please click the link below to verify your account.</p>
-            <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
-            `
+            text: "Hello from sendgrid"
+            //  `
+            // Hello, thanks for registering on our website.
+            // Please copy and paste the address below to verify your account.
+            // http://${req.headers.host}/verify-email?token=${emailToken}
+            // `
+            ,
+            html: 
+            // `
+            // <h1> Hello,</h1>
+            // <p>Thanks for registering on our website,</p>
+            // <p>Please click the link below to verify your account.</p>
+            // <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
+            // `
+            '<h1> Hello from sendgrid</h1>'
         };
         try {
-            await sgMail.send(msg);
+            sgMail.send(msg).then((response) => { console.log('Email sent.')});
             res.send({
                 success: true,
                 message: 'Thank you for registering. Please check your email to verify your account.'             

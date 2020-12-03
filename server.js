@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const sgMail = require('@sendgrid/mail');
 //const router = require('./routes/index');
 // import config files
 const config = require('./config');

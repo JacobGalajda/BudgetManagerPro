@@ -49,7 +49,7 @@ router.post('/login', function(req, res, next) {
                         res.status(401).send({
                             success: false,
                             message: 'User does not exist.'
-                        })
+                        });
                     }
                 });
             }
