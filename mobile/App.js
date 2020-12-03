@@ -1,5 +1,3 @@
-// Line 394 needs to be changed back to initial route "Login" instead of "MyTabs"
-
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -8,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
+  Image,
   Alert
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -45,6 +44,7 @@ var total = 0;
 var name;
 
 class Sign extends React.Component {
+  con;
   state = {
     email: "",
     phone: "",
@@ -131,8 +131,8 @@ class Sign extends React.Component {
             } else {
               Alert.alert("Error", "Passwords do not match");
             }
-            console.log(this.state.password);
-            console.log(this.state.confirmPassword);
+            // console.log(this.state.password);
+            // console.log(this.state.confirmPassword);
           }}
         >
           <Text style={styles.SignUp2}>Sign Up</Text>
@@ -143,6 +143,9 @@ class Sign extends React.Component {
 }
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     email: "",
     password: ""
@@ -192,13 +195,11 @@ class Login extends React.Component {
                 })
               }
             );
+
             let user = await response.json();
-            console.log(user.sucess);
 
             if (user.success) {
-              this.props.navigation.navigate("MyTabs", {
-                paramKey: user
-              });
+              this.props.navigation.navigate("MyTabs", user);
             } else {
               Alert.alert("Error!", "Email or Password is Incorrect", [
                 {
@@ -220,138 +221,168 @@ class Login extends React.Component {
   }
 }
 
-function ProfileScreen({ navigation }) {
-  return (
-    <ScrollView>
-      <Account />
-      <View style={styles.container2}>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => {
-            Alert.alert(
-              "Log Out?",
-              "Are you sure you want to log out?",
-              [
-                {
-                  text: "No",
-                  onPress: () => console.log("No Pressed!")
-                },
-                { text: "Yes", onPress: () => navigation.navigate("Login") }
-              ],
-              { cancelable: false }
-            );
-          }}
-        >
-          <Text style={styles.loginText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
-}
+class ProfileScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
 
-function BudgetScreen({ navigation }) {
-  return (
-    <View>
-      <View>
-        <Budget />
-        <View style={styles.budgetContainer}>
+  render() {
+    return (
+      <ScrollView>
+        <View style={styles.header}></View>
+        <Image style={styles.avatar} source={require("./images/Profile.png")} />
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            <View style={styles.buttonContainer}>
+              <Text>[Name]</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Text>[Email]</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Text>[Address]</Text>
+            </View>
+            <View style={styles.buttonContainerPhone}>
+              <Text>[Phone]</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.container2}>
           <TouchableOpacity
-            style={styles.loginBtn1}
+            style={styles.loginBtn}
             onPress={() => {
-              navigation.navigate("PrevBudgets");
+              Alert.alert(
+                "Log Out?",
+                "Are you sure you want to log out?",
+                [
+                  {
+                    text: "No"
+                    // onPress: () => console.log("No Pressed!")
+                  },
+                  {
+                    text: "Yes",
+                    onPress: () => this.props.navigation.navigate("Login")
+                  }
+                ],
+                { cancelable: false }
+              );
             }}
           >
-            <Text style={styles.bugdetButton}>View Previous Budgets</Text>
+            <Text style={styles.loginText}>Log Out</Text>
           </TouchableOpacity>
-          <VictoryChart height={500}>
-            <VictoryLine
-              style={{
-                data: { stroke: "#68A047" }
-              }}
-              data={[
-                { x: "August", y: 3250 },
-                { x: "July", y: 1540 },
-                { x: "September", y: 1890 },
-                { x: "November", y: 4260 },
-                { x: "December", y: 3540 }
-              ]}
-            />
-            <VictoryLine
-              style={{
-                data: { stroke: "#c43a31" }
-              }}
-              data={[
-                { x: "August", y: 3250 },
-                { x: "July", y: 4210 },
-                { x: "September", y: 4020 },
-                { x: "November", y: 3223 },
-                { x: "December", y: 1232 }
-              ]}
-            />
-          </VictoryChart>
         </View>
-      </View>
-      <DropDownPicker
-        items={[
-          { label: "Two Months", value: "rent" },
-          { label: "Three Months", value: "rent" },
-          { label: "Six Months", value: "rent" },
-          { label: "Nine Months", value: "rent" },
-          { label: "1 Year", value: "rent" },
-          { label: "2 Years", value: "rent" }
-        ]}
-        placeholder="Duration"
-        containerStyle={{ height: 40 }}
-        style={{ color: "#68A047" }}
-        dropDownStyle={{ backgroundColor: "#fafafa" }}
-      />
-    </View>
-  );
+      </ScrollView>
+    );
+  }
 }
-function BudgetHistoryScreen({ navigation }) {
-  return (
-    <View>
-      <BudgetHistory />
-      <VictoryChart theme={VictoryTheme.material} domainPadding={{ x: 15 }}>
-        <VictoryBar
-          barRatio={0.8}
-          style={{
-            data: { fill: "#c43a31" }
-          }}
-          data={[
-            { x: 1, y: 2 },
-            { x: 2, y: 3 },
-            { x: 3, y: 5 },
-            { x: 4, y: 4 },
-            { x: 5, y: 6 }
-          ]}
-          height={300}
-        />
-      </VictoryChart>
-    </View>
-  );
-}
-const BStack = createStackNavigator();
-function BudgetStack({ navigation }) {
-  return (
-    <BStack.Navigator>
-      <BStack.Screen
-        name="Budget"
-        component={BudgetScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-      <BStack.Screen
-        name="PrevBudgets"
-        component={BudgetHistoryScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-    </BStack.Navigator>
-  );
-}
+
+// function BudgetScreen({ navigation }) {
+//   return (
+//     <View>
+//       <View>
+//         <Budget />
+//         <View style={styles.budgetContainer}>
+//           <TouchableOpacity
+//             style={styles.loginBtn1}
+//             onPress={() => {
+//               navigation.navigate("PrevBudgets");
+//             }}
+//           >
+//             <Text style={styles.bugdetButton}>View Previous Budgets</Text>
+//           </TouchableOpacity>
+//           <VictoryChart height={500}>
+//             <VictoryLine
+//               style={{
+//                 data: { stroke: "#68A047" }
+//               }}
+//               data={[
+//                 { x: "August", y: 3250 },
+//                 { x: "July", y: 1540 },
+//                 { x: "September", y: 1890 },
+//                 { x: "November", y: 4260 },
+//                 { x: "December", y: 3540 }
+//               ]}
+//             />
+//             <VictoryLine
+//               style={{
+//                 data: { stroke: "#c43a31" }
+//               }}
+//               data={[
+//                 { x: "August", y: 3250 },
+//                 { x: "July", y: 4210 },
+//                 { x: "September", y: 4020 },
+//                 { x: "November", y: 3223 },
+//                 { x: "December", y: 1232 }
+//               ]}
+//             />
+//           </VictoryChart>
+//         </View>
+//       </View>
+//       <DropDownPicker
+//         items={[
+//           { label: "Two Months", value: "rent" },
+//           { label: "Three Months", value: "rent" },
+//           { label: "Six Months", value: "rent" },
+//           { label: "Nine Months", value: "rent" },
+//           { label: "1 Year", value: "rent" },
+//           { label: "2 Years", value: "rent" }
+//         ]}
+//         placeholder="Duration"
+//         containerStyle={{ height: 40 }}
+//         style={{ color: "#68A047" }}
+//         dropDownStyle={{ backgroundColor: "#fafafa" }}
+//       />
+//     </View>
+//   );
+// }
+// function BudgetHistoryScreen({ navigation }) {
+//   return (
+//     <View>
+//       <BudgetHistory />
+//       <VictoryChart theme={VictoryTheme.material} domainPadding={{ x: 15 }}>
+//         <VictoryBar
+//           barRatio={0.8}
+//           style={{
+//             data: { fill: "#c43a31" }
+//           }}
+//           data={[
+//             { x: 1, y: 2 },
+//             { x: 2, y: 3 },
+//             { x: 3, y: 5 },
+//             { x: 4, y: 4 },
+//             { x: 5, y: 6 }
+//           ]}
+//           height={300}
+//         />
+//       </VictoryChart>
+//     </View>
+//   );
+// }
+// const BStack = createStackNavigator();
+// function BudgetStack({ navigation }) {
+//   return (
+//     <BStack.Navigator>
+//       <BStack.Screen
+//         name="Budget"
+//         component={BudgetScreen}
+//         options={{
+//           headerShown: false
+//         }}
+//       />
+//       <BStack.Screen
+//         name="PrevBudgets"
+//         component={BudgetHistoryScreen}
+//         options={{
+//           headerShown: false
+//         }}
+//       />
+//     </BStack.Navigator>
+//   );
+// }
 
 function ManageScreen({ navigation }) {
   const [expenses, setExpenses] = useState([
@@ -392,61 +423,60 @@ function ManageScreen({ navigation }) {
   );
 }
 
-function SpendingScreen({ navigation }) {
-  const [expenses, setExpenses] = useState([
-    { text: "Figure out", key: "1" },
-    { text: "How to", key: "2" },
-    { text: "Do this", key: "3" },
-    { text: "Globally", key: "4" }
-  ]);
-  const pressHandler = key => {
-    setExpenses(prevExpenses => {
-      Alert.alert("Warning!", "Take this out of the budget?");
-      return prevExpenses.filter(expense => expense.key != key);
-    });
-  };
-  return (
-    <View>
-      <Spending />
-      <ViewExpenses />
-      <VictoryPie
-        height={350}
-        colorScale={[
-          "#68A047",
-          "#FFDD0E",
-          "#E9AE0B",
-          "#526c5b",
-          "#dcdcbb",
-          "#fa6e06",
-          "#244c3c",
-          "#590202",
-          "#a7bf50"
-        ]}
-        // filled in with dummy data
-        data={[
-          { x: 1, y: 12, label: "Rent" },
-          { x: 2, y: 12, label: "Subscriptions" },
-          { x: 3, y: 25, label: "Only" },
-          { x: 3, y: 12, label: "Food" },
-          { x: 3, y: 25, label: "Alcohol" },
-          { x: 3, y: 25, label: "Electric" }
-        ]}
-      />
-      <FlatList
-        data={expenses}
-        renderItem={({ item }) => (
-          <ExpenseItem item={item} pressHandler={pressHandler} />
-        )}
-      />
-    </View>
-  );
-}
+// function SpendingScreen({ navigation }) {
+//   const [expenses, setExpenses] = useState([
+//     { text: "Figure out", key: "1" },
+//     { text: "How to", key: "2" },
+//     { text: "Do this", key: "3" },
+//     { text: "Globally", key: "4" }
+//   ]);
+//   const pressHandler = key => {
+//     setExpenses(prevExpenses => {
+//       Alert.alert("Warning!", "Take this out of the budget?");
+//       return prevExpenses.filter(expense => expense.key != key);
+//     });
+//   };
+//   return (
+//     <View>
+//       <Spending />
+//       <ViewExpenses />
+//       <VictoryPie
+//         height={350}
+//         colorScale={[
+//           "#68A047",
+//           "#FFDD0E",
+//           "#E9AE0B",
+//           "#526c5b",
+//           "#dcdcbb",
+//           "#fa6e06",
+//           "#244c3c",
+//           "#590202",
+//           "#a7bf50"
+//         ]}
+//         // filled in with dummy data
+//         data={[
+//           { x: 1, y: 12, label: "Rent" },
+//           { x: 2, y: 12, label: "Subscriptions" },
+//           { x: 3, y: 25, label: "Only" },
+//           { x: 3, y: 12, label: "Food" },
+//           { x: 3, y: 25, label: "Alcohol" },
+//           { x: 3, y: 25, label: "Electric" }
+//         ]}
+//       />
+//       <FlatList
+//         data={expenses}
+//         renderItem={({ item }) => (
+//           <ExpenseItem item={item} pressHandler={pressHandler} />
+//         )}
+//       />
+//     </View>
+//   );
+// }
 
 function MyTabs({ route }) {
-  console.log(route.params.paramKey);
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Profile"
       tabBarOptions={{
         showIcon: true,
         activeTintColor: "#000",
@@ -460,7 +490,7 @@ function MyTabs({ route }) {
         }
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Budget"
         component={BudgetStack}
         options={{
@@ -471,7 +501,7 @@ function MyTabs({ route }) {
             <Icon name="Icon" size={30} color="#900" />
           )
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Manage"
         component={ManageScreen}
@@ -483,22 +513,42 @@ function MyTabs({ route }) {
         name="Home"
         component={homeScreen}
         options={{
-          headerShown: false
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Icon name="ios-home" color={color} size={24} />
+          )
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Spending"
         component={SpendingScreen}
         options={{
           headerShown: false
         }}
+      /> */}
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        // children={() => <ProfileScreen propName={route} />}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Icon
+              name="ios-person"
+              color={color}
+              size={25}
+              // focused={focused}
+            />
+          )
+        }}
+        headerMode="none"
       />
-      <Tab.Screen name="Profile" component={ProfileScreen} headerMode="none" />
     </Tab.Navigator>
   );
 }
 
-function homeScreen({ navigation, route }) {
+function homeScreen({ navigation }) {
+  // console.log("Testing regular object: " + route.params.paramKey);
+  // console.log(route.params.paramKey);
   return (
     <View>
       <View>
@@ -523,87 +573,6 @@ function ForgotPassword({ navigation }) {
     </View>
   );
 }
-
-// function LoginScreen({ navigation }) {
-// var login;
-
-// login = async (email, pass) => {
-//   let response = await fetch(
-//     "https://budgetmanagerpro.herokuapp.com/auth/login",
-//     {
-//       method: "POST",
-//       headers: {
-//         Accept: "application/json",
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify({
-//         email: email,
-//         password: pass
-//       })
-//     }
-//   );
-//   let json = await response.json();
-//   alert(json.success);
-// };
-
-// return (
-//   <View style={styles.container4}>
-//     <Login />
-
-{
-  /* <View style={styles.container}>
-        <Text style={styles.logo}>Budget Manager</Text>
-        <Text style={styles.logo2}>Pro</Text>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ email: text })}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ password: text })}
-          />
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-          <Text style={styles.forgot}>Forgot Password?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => {
-            Alert.alert(
-              "Signing In",
-              "Welcome!",
-              [
-                {
-                  text: "Dont Sign in",
-                  onPress: () => console.log(this.state.email)
-                },
-                {
-                  text: "OK",
-                  onPress: () => login(this.state.email, this.state.password)
-                }
-              ],
-              { cancelable: false }
-            );
-          }}
-        >
-          <Text style={styles.loginText}>LOGIN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-          <Text style={styles.SignUp}>Sign Up</Text>
-        </TouchableOpacity>
-      </View> */
-}
-//     </View>
-//   );
-// }
 
 const Stack = createStackNavigator();
 
@@ -796,8 +765,6 @@ const styles = StyleSheet.create({
   },
   SignUp2: {
     color: "white"
-    // textDecorationLine: "underline"
-    // marginBottom: 300
   },
   buttonContainer: {
     marginTop: 10,
@@ -871,5 +838,94 @@ const styles = StyleSheet.create({
     color: "white",
     textDecorationLine: "underline",
     marginBottom: 300
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    marginBottom: 10,
+    alignSelf: "center",
+    position: "absolute",
+    marginTop: 100
+  },
+  boxSimple: {
+    backgroundColor: "#fff",
+    borderRadius: 4,
+    borderWidth: 0.1,
+    borderColor: "#000",
+    padding: 10,
+    margin: 20
+  },
+  boxText: {
+    fontSize: 15,
+    backgroundColor: "#fff"
+  },
+  header: {
+    backgroundColor: "#68A047",
+    height: 180
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    marginBottom: 10,
+    alignSelf: "center",
+    position: "absolute",
+    marginTop: 100
+  },
+  name: {
+    fontSize: 22,
+    color: "#000",
+    fontWeight: "600"
+  },
+  body: {
+    marginTop: 40
+  },
+  bodyContent: {
+    flex: 1,
+    alignItems: "center",
+
+    backgroundColor: "#fff"
+  },
+  name: {
+    fontSize: 28,
+    color: "#68A047",
+    fontWeight: "600"
+  },
+  info: {
+    fontSize: 16,
+    backgroundColor: "#fff",
+    marginTop: 10
+  },
+  description: {
+    fontSize: 16,
+    color: "white",
+    marginTop: 10,
+    textAlign: "center"
+  },
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: "#68A047"
+  },
+  buttonContainerPhone: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: "#68A047"
   }
 });
