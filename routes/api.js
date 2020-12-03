@@ -32,56 +32,56 @@ router.get('/users', function(req, res) {
     });
 });
 
-router.post('/test', async (req, res) => {
-    const msg = {
-        to: 'luizgustavorocco@gmail.com',
-        from: 'budgetmanagerproapp@gmail.com',
-        subject: 'test',
-        text: "TESTING."
-    }
-    try {
-        await sgMail.send(msg).then((response) => console.log(response));
-        res.send({ text: "OK."});
-    } catch(error) {
-        console.log(error);
-    }
-});
+// router.post('/test', async (req, res) => {
+//     const msg = {
+//         to: 'luizgustavorocco@gmail.com',
+//         from: 'budgetmanagerproapp@gmail.com',
+//         subject: 'test',
+//         text: "TESTING."
+//     }
+//     try {
+//         await sgMail.send(msg).then((response) => console.log(response));
+//         res.send({ text: "OK."});
+//     } catch(error) {
+//         console.log(error);
+//     }
+// });
 
 // API endpoint - post new user
-router.post('/users', async function(req, res, next) {
+router.post('/users', async function(req, res, next) {  
+    req.body.emailToken = crypto.randomBytes(64).toString('hex');
     Users.create(req.body).then(async function(user) {
-        const emailToken = crypto.randomBytes(64).toString('hex');
         const msg = {
             to: 'luizgustavorocco@hotmail.com',
             from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
-            text: "Hello from sendgrid"
-            //  `
-            // Hello, thanks for registering on our website.
-            // Please copy and paste the address below to verify your account.
-            // http://${req.headers.host}/verify-email?token=${emailToken}
-            // `
+            text: 
+             `
+            Hello, thanks for registering on our website.
+            Please copy and paste the address below to verify your account.
+            http://${req.headers.host}/verify-email?token=${req.body.emailToken}
+            `
             ,
             html: 
-            // `
-            // <h1> Hello,</h1>
-            // <p>Thanks for registering on our website,</p>
-            // <p>Please click the link below to verify your account.</p>
-            // <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
-            // `
-            '<h1> Hello from sendgrid</h1>'
+            `
+            <h1> Hello,</h1>
+            <p>Thanks for registering on our website,</p>
+            <p>Please click the link below to verify your account.</p>
+            <a href="http://${req.headers.host}/verify-email?token=${req.body.emailToken}"> Verify your account</a>
+            `
         };
         try {
-            sgMail.send(msg).then((response) => { console.log('Email sent.')});
-            res.send({
-                success: true,
-                message: 'Thank you for registering. Please check your email to verify your account.'             
-            });
+            await sgMail.send(msg).then((response) => {
+                res.send({
+                    success: true,
+                    message: 'Thank you for registering. Please check your email to verify your account.'             
+                });
+            });           
         } catch(error) {
             console.log(error);
             res.status(401).send({
                 success: false,
-                message: 'Something went wrong. Please contact us at noreply@email.com'
+                message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
             });
         }
     }).catch(next);
