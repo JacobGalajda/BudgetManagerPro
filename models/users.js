@@ -29,7 +29,12 @@ const UsersSchema = new Schema({
         type: Boolean,
         //required: true,
         default: false
-    }
+    },
+    emailToken: {
+        type: String,
+        //required: [true, 'Email field is required']
+        default: null
+    },
 });
 
 // create new collection modelled after UserSchema
