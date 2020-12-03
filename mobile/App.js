@@ -100,18 +100,44 @@ class Sign extends React.Component {
             onChangeText={text => this.setState({ confirmPassword: text })}
           />
         </View>
+
         <TouchableOpacity
           style={styles.loginBtn}
-          onPress={() => {
-            this.props.navigation.navigate("Login");
-            Alert.alert("Yay!", "You've Signed Up!");
+          onPress={async () => {
+            if (
+              this.state.password == this.state.confirmPassword &&
+              this.state.password != ""
+            ) {
+              let response = await fetch(
+                "https://budgetmanagerpro.herokuapp.com/api/users",
+                {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    email: this.state.email,
+                    phone: this.state.phone,
+                    userName: this.state.userName,
+                    password: this.state.password
+                  })
+                }
+              );
+              let user = await response.json();
+
+              this.props.navigation.navigate("Login");
+              Alert.alert("Yay!", "You've Signed Up!");
+            } else {
+              Alert.alert("Error", "Passwords do not match");
+            }
+            console.log(this.state.password);
+            console.log(this.state.confirmPassword);
           }}
         >
           <Text style={styles.SignUp2}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      // </View>
-      // </View>
     );
   }
 }
@@ -167,7 +193,7 @@ class Login extends React.Component {
               }
             );
             let user = await response.json();
-            console.log(user.success);
+            console.log(user.sucess);
 
             if (user.success) {
               this.props.navigation.navigate("MyTabs", {
