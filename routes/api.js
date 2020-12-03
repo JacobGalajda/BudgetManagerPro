@@ -7,7 +7,7 @@ const config = require('../config');
 
 //require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(config.SECRET_API_KEY);
+sgMail.setApiKey('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');
 
 //require crypto
 const crypto = require('crypto');
@@ -36,7 +36,7 @@ router.post('/users', async function(req, res, next) {
     Users.create(req.body).then(async function(user) {
         const emailToken = crypto.randomBytes(64).toString('hex');
         const msg = {
-            to: req.body.email,
+            to: 'luizgustavorocco@hotmail.com',
             from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: `
