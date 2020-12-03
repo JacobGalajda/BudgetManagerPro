@@ -5,6 +5,9 @@ const express = require('express');
 //require config variable
 const config = require('../config');
 
+// flash
+const flash = require('connect-flash');
+
 //require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
 const API_KEY = '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';
@@ -52,7 +55,7 @@ router.post('/users', async function(req, res, next) {
     req.body.emailToken = crypto.randomBytes(64).toString('hex');
     Users.create(req.body).then(async function(user) {
         const msg = {
-            to: 'luizgustavorocco@gmail.com',
+            to: req.body.email,
             from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: 
@@ -100,6 +103,7 @@ router.get('/verify-email', async (req, res, next) => {
         user.emailToken = null;
         user.verified = true;
         await user.save();
+        res.redirect('http://');
         res.send({
             success: true,
             message: "User verified."
