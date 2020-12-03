@@ -59,7 +59,7 @@ router.post('/users', async function(req, res, next) {
              `
             Hello, thanks for registering on our website.
             Please copy and paste the address below to verify your account.
-            http://${req.headers.host}/verify-email?token=${req.body.emailToken}
+            http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
             `
             ,
             html: 
@@ -67,7 +67,7 @@ router.post('/users', async function(req, res, next) {
             <h1> Hello,</h1>
             <p>Thanks for registering on our website,</p>
             <p>Please click the link below to verify your account.</p>
-            <a href="http://${req.headers.host}/verify-email?token=${req.body.emailToken}"> Verify your account</a>
+            <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
             `
         };
         try {
@@ -90,7 +90,7 @@ router.post('/users', async function(req, res, next) {
 // Email verification route
 router.get('/verify-email', async (req, res, next) => {
     try {
-        const user = await Users.findOne({emailToken: req.query.token});
+        const user = await Users.findOne({ emailToken: req.query.token });
         if (!user) {
             res.status(401).send({
                 success: false,
