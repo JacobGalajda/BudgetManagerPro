@@ -1,28 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import './budgetFormatting.css'
+//import './bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Jacob was here... 
-        </p> 
+      <body>
+        <br></br>
+        <br></br>
+        <h1>Budget Manager</h1>
+        <h1>Pro</h1>
+        <br></br>
 
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <h6>A place to organize finances to ensure that they are within their financial scopes.</h6>
+        <div className="white-box">
+            <form className="box">
+              <p id="loginResult"></p>
+            
+              <input type="text" id="loginName" placeholder="email"></input>
+              <input type="password" id="loginPassword" placeholder="Password"></input>
+            
+              <a href>Forgot password...</a>
+              <br></br>
+              <a href>Sign up</a>
+
+              <button id="loginButton" onclick="alert('WOOOHOOO');">Login</button>
+            </form>
+        </div>
+        </body>
+      </div>
   );
 }
 
