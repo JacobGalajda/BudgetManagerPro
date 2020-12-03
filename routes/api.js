@@ -52,7 +52,7 @@ router.post('/users', async function(req, res, next) {
     req.body.emailToken = crypto.randomBytes(64).toString('hex');
     Users.create(req.body).then(async function(user) {
         const msg = {
-            to: 'luizgustavorocco@hotmail.com',
+            to: 'luizgustavorocco@gmail.com',
             from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: 

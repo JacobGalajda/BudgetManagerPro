@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
-app.use('/testAuth', require('./routes/testAuth'));
+//app.use('/testAuth', require('./routes/testAuth'));
 
 // Check production
 if (process.env.NODE_ENV === 'production') {
