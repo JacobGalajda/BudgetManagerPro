@@ -12,7 +12,6 @@ const flash = require('connect-flash');
 const sgMail = require('@sendgrid/mail');
 const API_KEY = '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';
 sgMail.setApiKey(API_KEY);
-
 //require crypto
 const crypto = require('crypto');
 
