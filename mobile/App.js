@@ -143,6 +143,7 @@ class Sign extends React.Component {
 }
 
 class Login extends React.Component {
+  //function Login({ navigation }) {
   constructor(props) {
     super(props);
   }
@@ -152,6 +153,7 @@ class Login extends React.Component {
   };
 
   render() {
+    var user;
     return (
       <View style={styles.LoginContainer}>
         <Text style={styles.LoginLogo}>Budget Manager</Text>
@@ -181,32 +183,42 @@ class Login extends React.Component {
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={async () => {
-            let response = await fetch(
-              "https://budgetmanagerpro.herokuapp.com/auth/login",
-              {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  email: this.state.email,
-                  password: this.state.password
-                })
-              }
-            );
-
-            let user = await response.json();
-
-            if (user.success) {
-              this.props.navigation.navigate("MyTabs", user);
-            } else {
-              Alert.alert("Error!", "Email or Password is Incorrect", [
+            // Alert.alert("Hello");
+            try {
+              let response = await fetch(
+                "https://budgetmanagerpro.herokuapp.com/auth/login",
                 {
-                  text: "Try again"
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.password
+                  })
                 }
-              ]);
+              );
+              user = await response.json();
+            } catch (err) {
+              console.log(err);
             }
+
+            // if (user.success) {
+            //   // Alert.alert("valid login email: " + user.id);
+            //   // Alert.alert(getState(user));
+            //   //this.props.navigation.navigate("MyTabs", user);
+
+            //   //
+            //   // Alert.alert("valid login props (this.props): " + this.props);
+            //   //
+            // else {
+            //   Alert.alert("Error!", "Email or Password is Incorrect", [
+            //     {
+            //       text: "Try again"
+            //     }
+            //   ]);
+            // }
           }}
         >
           <Text style={styles.loginText}>LOGIN</Text>
@@ -221,63 +233,58 @@ class Login extends React.Component {
   }
 }
 
-class ProfileScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: ""
-    };
-  }
+function ProfileScreen({ route, navigation }) {
+  const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
+  console.log("parent params", parentState.routes[parentState.index].params);
+  const user = parentState.routes[parentState.index].params;
+  // console.log("\n\n\n:::::Testing: " + user.email);
 
-  render() {
-    return (
-      <ScrollView>
-        <View style={styles.header}></View>
-        <Image style={styles.avatar} source={require("./images/Profile.png")} />
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <View style={styles.buttonContainer}>
-              <Text>[Name]</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Text>[Email]</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Text>[Address]</Text>
-            </View>
-            <View style={styles.buttonContainerPhone}>
-              <Text>[Phone]</Text>
-            </View>
+  return (
+    <ScrollView>
+      <View style={styles.header}></View>
+      <Image style={styles.avatar} source={require("./images/Profile.png")} />
+      <View style={styles.body}>
+        <View style={styles.bodyContent}>
+          <View style={styles.buttonContainer}>
+            <Text>{JSON.stringify(user.paramKeys.id)}</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Text>{user.email}</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Text>{user.password}</Text>
+          </View>
+          <View style={styles.buttonContainerPhone}>
+            <Text>Fuck this project!!</Text>
           </View>
         </View>
-        <View style={styles.container2}>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => {
-              Alert.alert(
-                "Log Out?",
-                "Are you sure you want to log out?",
-                [
-                  {
-                    text: "No"
-                    // onPress: () => console.log("No Pressed!")
-                  },
-                  {
-                    text: "Yes",
-                    onPress: () => this.props.navigation.navigate("Login")
-                  }
-                ],
-                { cancelable: false }
-              );
-            }}
-          >
-            <Text style={styles.loginText}>Log Out</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    );
-  }
+      </View>
+      <View style={styles.container2}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            Alert.alert(
+              "Log Out?",
+              "Are you sure you want to log out?",
+              [
+                {
+                  text: "No"
+                  // onPress: () => console.log("No Pressed!")
+                },
+                {
+                  text: "Yes",
+                  onPress: () => navigation.navigate("Login")
+                }
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
+          <Text style={styles.loginText}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
 }
 
 // function BudgetScreen({ navigation }) {
@@ -363,6 +370,7 @@ class ProfileScreen extends React.Component {
 //   );
 // }
 // const BStack = createStackNavigator();
+
 // function BudgetStack({ navigation }) {
 //   return (
 //     <BStack.Navigator>
@@ -473,7 +481,18 @@ function ManageScreen({ navigation }) {
 //   );
 // }
 
-function MyTabs({ route }) {
+function MyTabs({ route, navigation }) {
+  const { paramKeys } = route.params;
+  const { email } = route.params;
+  const { password } = route.params;
+  // console.log("Test: " + paramKeys.success);
+  // console.log("email: " + email);
+  // console.log("password: " + password);
+  //function MyTabs({ props }) {
+  //console.log(route.params.paramKey);
+  //console.log(route.id);
+  // const response = this.props.navigation.getParam("Login");
+
   return (
     <Tab.Navigator
       initialRouteName="Profile"
@@ -506,7 +525,10 @@ function MyTabs({ route }) {
         name="Manage"
         component={ManageScreen}
         options={{
-          headerShown: false
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Icon name="ios-cash" color={color} size={24} />
+          )
         }}
       />
       <Tab.Screen
@@ -528,8 +550,8 @@ function MyTabs({ route }) {
       /> */}
       <Tab.Screen
         name="Profile"
+        // component={() => <ProfileScreen propName={paramKeys} />}
         component={ProfileScreen}
-        // children={() => <ProfileScreen propName={route} />}
         options={{
           tabBarIcon: ({ color }) => (
             <Icon
@@ -886,6 +908,7 @@ const styles = StyleSheet.create({
     marginTop: 40
   },
   bodyContent: {
+    marginTop: 60,
     flex: 1,
     alignItems: "center",
 
