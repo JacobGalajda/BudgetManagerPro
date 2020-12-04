@@ -1,14 +1,17 @@
-//routes/index.js
+// routes/index.js
 // require express
 const express = require('express');
 
 //require config variable
 const config = require('../config');
 
+// flash
+const flash = require('connect-flash');
+
 //require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('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');
-
+const API_KEY = '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';
+sgMail.setApiKey(API_KEY);
 //require crypto
 const crypto = require('crypto');
 
@@ -31,38 +34,56 @@ router.get('/users', function(req, res) {
     });
 });
 
+// router.post('/test', async (req, res) => {
+//     const msg = {
+//         to: 'luizgustavorocco@gmail.com',
+//         from: 'budgetmanagerproapp@gmail.com',
+//         subject: 'test',
+//         text: "TESTING."
+//     }
+//     try {
+//         await sgMail.send(msg).then((response) => console.log(response));
+//         res.send({ text: "OK."});
+//     } catch(error) {
+//         console.log(error);
+//     }
+// });
+
 // API endpoint - post new user
-router.post('/users', async function(req, res, next) {
+router.post('/users', async function(req, res, next) {  
+    req.body.emailToken = crypto.randomBytes(64).toString('hex');
     Users.create(req.body).then(async function(user) {
-        const emailToken = crypto.randomBytes(64).toString('hex');
         const msg = {
             to: req.body.email,
-            from: 'noreply@email.com',
+            from: 'budgetmanagerproapp@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
-            text: `
+            text: 
+             `
             Hello, thanks for registering on our website.
             Please copy and paste the address below to verify your account.
-            http://${req.headers.host}/verify-email?token=${emailToken}
-            `,
-            html: `
+            http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
+            `
+            ,
+            html: 
+            `
             <h1> Hello,</h1>
             <p>Thanks for registering on our website,</p>
             <p>Please click the link below to verify your account.</p>
-            <a href="http://${req.headers.host}/verify-email?token=${emailToken}"> Verify your account</a>
+            <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
             `
         };
         try {
-            await sgMail.send(msg);
-            res.send({
-                success: true,
-                message: 'Thank you for registering. Please check your email to verify your account.'             
-            });
-            //res.redirect('/');
+            await sgMail.send(msg).then((response) => {
+                res.send({
+                    success: true,
+                    message: 'Thank you for registering. Please check your email to verify your account.'             
+                });
+            });           
         } catch(error) {
             console.log(error);
             res.status(401).send({
                 success: false,
-                message: 'Something went wrong. Please contact us at noreply@email.com'
+                message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
             });
         }
     }).catch(next);
@@ -71,7 +92,7 @@ router.post('/users', async function(req, res, next) {
 // Email verification route
 router.get('/verify-email', async (req, res, next) => {
     try {
-        const user = await Users.findOne({emailToken: req.query.token});
+        const user = await Users.findOne({ emailToken: req.query.token });
         if (!user) {
             res.status(401).send({
                 success: false,
@@ -81,6 +102,7 @@ router.get('/verify-email', async (req, res, next) => {
         user.emailToken = null;
         user.verified = true;
         await user.save();
+        res.redirect('http://');
         res.send({
             success: true,
             message: "User verified."

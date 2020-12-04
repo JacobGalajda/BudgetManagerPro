@@ -2,6 +2,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// import budget object so user can create schema
+const Budget = require('../models/budget');
+
 // create schema and model
 // pass in object with different properties and their data types
 const UsersSchema = new Schema({
@@ -26,7 +29,12 @@ const UsersSchema = new Schema({
         type: Boolean,
         //required: true,
         default: false
-    }
+    },
+    emailToken: {
+        type: String,
+        //required: [true, 'Email field is required']
+        default: null
+    },
 });
 
 // create new collection modelled after UserSchema

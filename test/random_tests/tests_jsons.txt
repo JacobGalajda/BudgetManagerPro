@@ -1,0 +1,121 @@
+{
+"budget_category": "Professional",
+"budget_name": "new_budget_test",
+"budget_final_date": "2020-12-31T01:46:20.000+00:00",
+"budget_expense": [
+    {
+        "expense_category": "Incidental",
+        "expense_recurring": false,
+        "expense_paid": false,
+        "_id": "5fc2ed6faafd0e27d78c73ca",
+        "expense_name": "expense_1",
+        "expense_cost": 10,
+        "expense_due_date": "1606610287857",
+        "expense_created_at": "1606610287857"
+    }
+],
+"budget_income": [
+    {
+        "income_category": "Incidential",
+        "income_recurring": false,
+        "income_received": true,
+        "_id": "5fc2ed6faafd0e27d78c73cb",
+        "income_name": "income_1",
+        "income_amount": 15,
+        "income_receive_date": "1606610287858",
+        "income_created_at": "1606610287858"
+    }
+],
+"budget_goal": [
+    {
+        "goal_category": "Incidential",
+        "_id": "5fc2ed6faafd0e27d78c73cc",
+        "goal_name": "goal_1",
+        "goal_amount": 20,
+        "goal_date": "2020-12-01T01:46:20.000+00:00",
+        "goal_created_at": "1606610287858"
+    }
+],
+"budget_created_at": "1606610287858"
+}
+
+
+// empty budget
+{
+    "budget_category": "Professional",
+    "budget_name": "create_budget_empty",
+    "budget_final_date": "2020-12-31T01:46:20.000+00:00",
+    "budget_expense": [],
+    "budget_income": [],
+    "budget_goal": []
+}
+
+
+
+// add new budget to new user's budget array
+result.user_budgets.push(newBudget);
+
+// save user with new budget to mongoDB
+result.save().then(function() {
+
+    });
+});
+
+
+const newBudget = new Budget(req.body);
+
+
+
+// API endpoint - update budget by id
+router.put('/users/:id/budget/:id', function(req, res) {
+    // find user document by id and update with request body
+    Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
+        // check if this works by finding User's unique _id and checking for update
+        Users.findOne({ _id: req.params.id }).then(function(user) {
+            // send update back to as response
+            res.send(user);
+        });
+    });
+});
+
+// API endpoint - update budget by id
+router.put('/users/:id/budget/:id', function(req, res) {
+        // create a new user object based on Budget model
+        updatedBudget = new Budget(req.body);
+
+        // find user document by name and update (luigi)
+        Users.findOneAndUpdate({ "_id": req.params.id }, { user_budgets: updatedBudget }).then(function(err, user) {
+            // return user object to verify change
+            res.json(user);
+        });
+        });
+
+
+
+{
+    "budget_name": "updated_budget_1",
+    "budget_final_date": "2020-12-31T01:46:20.000+00:00",
+    "budget_expense": 
+    [
+        {
+            "expense_name": "expense_1",
+            "expense_cost": "10.00"
+        }
+    ],
+    "budget_income": 
+    [
+        {
+            "income_name": "income_1",
+            "income_amount": "15.00"
+        }
+    ],
+    "budget_goal": 
+    [
+        {
+            "goal_name": "goal_1",
+            "goal_amount": "20.00",
+            "goal_cateogory": "personal goal category",
+            "goal_date": "2020-12-01T01:46:20.000+00:00"
+        }
+    ]
+}

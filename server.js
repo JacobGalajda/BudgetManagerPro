@@ -5,6 +5,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const sgMail = require('@sendgrid/mail');
+const ejs = require('ejs');
 //const router = require('./routes/index');
 // import config files
 const config = require('./config');
@@ -12,9 +14,13 @@ const config = require('./config');
 // call express to create running app object
 const app = express();
 
+// set engine
+app.set('view engine', 'ejs'); 
+
 // set port and mongoDB url (local or global)
 const PORT = process.env.PORT || 3001;
 //const MONGODB_URI = "mongodb://localhost:27017/my_local_db";
+
 //const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/Test?retryWrites=true&w=majority";
 const MONGODB_URI = "mongodb+srv://root:!cop4331!@project.m58al.mongodb.net/cop4331?retryWrites=true&w=majority";
 // const MONGODB_URI = config.MONGODB_URI; Highly recommended change to secure mongoDB URI from hackers.
@@ -37,13 +43,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
-app.use('/testAuth', require('./routes/testAuth'));
+//app.use('/testAuth', require('./routes/testAuth'));
 
 // Check production
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'))
 
-    app.get('*', function (req, res) {
+    app.get('*', function(req, res) {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
 }
