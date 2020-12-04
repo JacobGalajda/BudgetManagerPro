@@ -6,16 +6,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
-const ejs = require('ejs');
-//const router = require('./routes/index');
+require('dotenv').config();
 // import config files
 const config = require('./config');
 
 // call express to create running app object
 const app = express();
-
-// set engine
-app.set('view engine', 'ejs'); 
 
 // set port and mongoDB url (local or global)
 const PORT = process.env.PORT || 3001;
