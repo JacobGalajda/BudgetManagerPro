@@ -6,13 +6,13 @@
 // require express
 const express = require('express');
 
-//require config variable
+// require config variable
 const config = require('../config');
 
-// flash
-const flash = require('connect-flash');
+// require verifyToken
+const verifyToken = require('./verifyToken');
 
-//require sendgrid/mail
+// require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SendGrid);
 //require crypto
@@ -125,7 +125,7 @@ router.get('/verify-email', async (req, res, next) => {
 });
 
 // API endpoint - update user
-router.put('/users/:id', function(req, res) {
+router.put('/users/:id', verifyToken, function(req, res) {
     // find user document by id and update with request body
     Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
         // check if this works by finding User's unique _id and checking for update
