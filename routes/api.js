@@ -102,11 +102,15 @@ router.get('/verify-email', async (req, res, next) => {
         user.emailToken = null;
         user.verified = true;
         await user.save();
-        res.redirect('http://');
-        res.send({
-            success: true,
-            message: "User verified."
-        });
+        const html = `
+        <p style="text-align:center">Your account is verified.</p>
+        <button onclick="window.location.href='://budgetmanagerpro.herokuapp.com';"> Login </button>
+        `
+        res.send(html);
+        // res.send({
+        //     success: true,
+        //     message: "User verified."
+        // });
     } catch(error) {
         console.log(error);
         res.status(401).send({
