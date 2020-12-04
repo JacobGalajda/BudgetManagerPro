@@ -25,6 +25,7 @@ const router = express.Router();
 // import Users/Budget database model
 const Users = require('../models/users');
 const Budget = require('../models/budget');
+const { getMaxListeners } = require('../models/budget');
 
 
 
@@ -135,6 +136,25 @@ router.put('/users/:id', function(req, res) {
     });
 });
 
+// Password reset
+router.get('/password-reset', async function(req, res, next) {
+    try {
+        const msg = {
+            to: req.body.email,
+            from: 'budgetmanagerproapp@gmail.com',
+            subject: 'Budget Manager Pro - Reset your password.',
+            text: 
+            `
+            Hello, 
+            Please copy and paste the link below to reset your password.
+            http//:
+            `
+        }
+    }catch {
+        ;
+    }
+});
+
 // API endpoint - delete user by id
 router.delete('/users/:id', function(req, res) {
     //res.send({ type: 'DELETE' });
@@ -170,7 +190,6 @@ router.get('/users/:id/budgets', function(req, res) {
         res.json(user.user_budgets)
 
     });
-
 });
 
 // API endpoint - post new budget
