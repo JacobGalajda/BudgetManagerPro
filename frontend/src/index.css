@@ -7,6 +7,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.center-main{
+  margin: auto;
+  width: 60%;
+  border: 5px solid black;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.center{
+  margin: auto;
+  text-align: center;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
