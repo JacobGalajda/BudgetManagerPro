@@ -29,7 +29,7 @@ class App extends Component {
         </Switch>
       <Switch>
         <Route exact path="/">
-          <Redirect to="/login"/>
+          <Redirect to="/login" />
         </Route>
       </Switch>
       </BrowserRouter>
