@@ -1,17 +1,20 @@
 // routes/index.js
+
+// require dotenv
+//require('dotenv').config();
+
 // require express
 const express = require('express');
 
-//require config variable
+// require config variable
 const config = require('../config');
 
-// flash
-const flash = require('connect-flash');
+// require verifyToken
+const verifyToken = require('./verifyToken');
 
-//require sendgrid/mail
+// require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-const API_KEY = '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';
-sgMail.setApiKey(API_KEY);
+sgMail.setApiKey(process.env.SendGrid);
 //require crypto
 const crypto = require('crypto');
 
@@ -22,6 +25,7 @@ const router = express.Router();
 // import Users/Budget database model
 const Users = require('../models/users');
 const Budget = require('../models/budget');
+const { getMaxListeners } = require('../models/budget');
 
 
 
@@ -33,21 +37,6 @@ router.get('/users', function(req, res) {
         res.send(users);
     });
 });
-
-// router.post('/test', async (req, res) => {
-//     const msg = {
-//         to: 'luizgustavorocco@gmail.com',
-//         from: 'budgetmanagerproapp@gmail.com',
-//         subject: 'test',
-//         text: "TESTING."
-//     }
-//     try {
-//         await sgMail.send(msg).then((response) => console.log(response));
-//         res.send({ text: "OK."});
-//     } catch(error) {
-//         console.log(error);
-//     }
-// });
 
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {  
@@ -102,11 +91,15 @@ router.get('/verify-email', async (req, res, next) => {
         user.emailToken = null;
         user.verified = true;
         await user.save();
-        res.redirect('http://');
-        res.send({
-            success: true,
-            message: "User verified."
-        });
+        const html = `
+        <p style="text-align:center">Your account is verified.</p>
+        <button onclick="window.location.href='://budgetmanagerpro.herokuapp.com';"> Login </button>
+        `
+        res.send(html);
+        // res.send({
+        //     success: true,
+        //     message: "User verified."
+        // });
     } catch(error) {
         console.log(error);
         res.status(401).send({
@@ -116,8 +109,27 @@ router.get('/verify-email', async (req, res, next) => {
     }
 });
 
+// Password reset
+router.get('/password-reset', async function(req, res, next) {
+    try {
+        const msg = {
+            to: req.body.email,
+            from: 'budgetmanagerproapp@gmail.com',
+            subject: 'Budget Manager Pro - Reset your password.',
+            text: 
+            `
+            Hello, 
+            Please copy and paste the link below to reset your password.
+            http//:
+            `
+        }
+    }catch {
+        ;
+    }
+});
+
 // API endpoint - update user
-router.put('/users/:id', function(req, res) {
+router.put('/users/:id', verifyToken, function(req, res) {
     // find user document by id and update with request body
     Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
         // check if this works by finding User's unique _id and checking for update
@@ -129,7 +141,7 @@ router.put('/users/:id', function(req, res) {
 });
 
 // API endpoint - delete user by id
-router.delete('/users/:id', function(req, res) {
+router.delete('/users/:id', verifyToken, function(req, res) {
     //res.send({ type: 'DELETE' });
 
     // find user document by id, delete
@@ -190,7 +202,7 @@ router.post('/users/:id/budgets', function(req, res, next) {
 });
 
 // API endpoint - update budget by user id
-router.put('/users/:id/budgets/:budget_id', function(req, res) {
+router.put('/users/:id/budgets/:budget_id', verifyToken, function(req, res) {
     // create a new user object based on Budget model
     updatedBudget = new Budget(req.body);
 
@@ -209,7 +221,7 @@ router.put('/users/:id/budgets/:budget_id', function(req, res) {
 });
 
 // API endpoint - delete budget by user id
-router.delete('/users/:id/budgets/:budget_id', function(req, res) {
+router.delete('/users/:id/budgets/:budget_id', verifyToken, function(req, res) {
     // create a new user object based on Budget model
     //updatedBudget = new Budget(req.body);
 
