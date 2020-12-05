@@ -109,18 +109,6 @@ router.get('/verify-email', async (req, res, next) => {
     }
 });
 
-// API endpoint - update user
-router.put('/users/:id', verifyToken, function(req, res) {
-    // find user document by id and update with request body
-    Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
-        // check if this works by finding User's unique _id and checking for update
-        Users.findOne({ _id: req.params.id }).then(function(user) {
-            // send update back to as response
-            res.send(user);
-        });
-    });
-});
-
 // Password reset
 router.get('/password-reset', async function(req, res, next) {
     try {
@@ -138,6 +126,18 @@ router.get('/password-reset', async function(req, res, next) {
     }catch {
         ;
     }
+});
+
+// API endpoint - update user
+router.put('/users/:id', verifyToken, function(req, res) {
+    // find user document by id and update with request body
+    Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
+        // check if this works by finding User's unique _id and checking for update
+        Users.findOne({ _id: req.params.id }).then(function(user) {
+            // send update back to as response
+            res.send(user);
+        });
+    });
 });
 
 // API endpoint - delete user by id
