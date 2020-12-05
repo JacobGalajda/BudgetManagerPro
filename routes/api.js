@@ -169,7 +169,7 @@ router.get('/users/:id/budgets', function(req, res) {
         };
 
         // print name of first budget to console
-        //console.log(user.user_budgets[0].budget_name);
+        console.log(user.user_budgets[0].budget_name);
 
         // respond with array of user_budgets
         res.json(user.user_budgets)
