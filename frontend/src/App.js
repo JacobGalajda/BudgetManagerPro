@@ -1,11 +1,16 @@
 import './App.css';
+import './index.css'
 import './budgetFormatting.css'
-//import './bootstrap/dist/css/bootstrap.min.css'
+import React, {Component, useState} from 'react';
 
-function App() {
+import bootsrap from 'react-bootstrap';
+
+
+class App extends Component {
+  render() {
   return (
-    <div className="App">
-      <body>
+    <div className="App-header">
+      <body className="center">
         <br></br>
         <br></br>
         <h1>Budget Manager</h1>
@@ -24,12 +29,14 @@ function App() {
               <br></br>
               <a href>Sign up</a>
 
-              <button id="loginButton" onclick="alert('WOOOHOOO');">Login</button>
+              <button id="loginButton" onclick="">Login</button>
             </form>
         </div>
+
         </body>
       </div>
   );
+  }
 }
 
 export default App;
