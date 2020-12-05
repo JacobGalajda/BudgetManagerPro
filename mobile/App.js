@@ -27,6 +27,7 @@ import AddExpense from "./bottomTab/addExpense";
 import ViewExpenses from "./bottomTab/viewExpenses";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import viewExpenses from "./bottomTab/viewExpenses";
+import Header from "./components/header";
 import {
   VictoryPie,
   VictoryBar,
@@ -44,7 +45,6 @@ var total = 0;
 var name;
 
 class Sign extends React.Component {
-  con;
   state = {
     email: "",
     phone: "",
@@ -127,7 +127,7 @@ class Sign extends React.Component {
               let user = await response.json();
 
               this.props.navigation.navigate("Login");
-              Alert.alert("Yay!", "You've Signed Up!");
+              Alert.alert("Notice!", "Verify Email Before Signing In!");
             } else {
               Alert.alert("Error", "Passwords do not match");
             }
@@ -153,7 +153,7 @@ class Login extends React.Component {
   };
 
   render() {
-    var user;
+    var res;
     return (
       <View style={styles.LoginContainer}>
         <Text style={styles.LoginLogo}>Budget Manager</Text>
@@ -199,26 +199,32 @@ class Login extends React.Component {
                   })
                 }
               );
-              user = await response.json();
+              res = await response.json();
             } catch (err) {
               console.log(err);
             }
 
-            // if (user.success) {
-            //   // Alert.alert("valid login email: " + user.id);
-            //   // Alert.alert(getState(user));
-            //   //this.props.navigation.navigate("MyTabs", user);
-
-            //   //
-            //   // Alert.alert("valid login props (this.props): " + this.props);
-            //   //
-            // else {
-            //   Alert.alert("Error!", "Email or Password is Incorrect", [
-            //     {
-            //       text: "Try again"
-            //     }
-            //   ]);
-            // }
+            console.log("Verified: " + res.user.verified);
+            console.log("Success: " + res.success);
+            if (!res.success) {
+              Alert.alert("Uh Oh!", "Email or Password is incorrect");
+            }
+            if (res.success) {
+              if (!res.user.verified) {
+                Alert.alert(
+                  "Uh Oh!",
+                  "Please verify account before signing in!"
+                );
+              }
+              if (res.user.verified) {
+                this.props.navigation.navigate("MyTabs", {
+                  paramKeys: res.user,
+                  token: res.token,
+                  email: this.state.email,
+                  password: this.state.password
+                });
+              }
+            }
           }}
         >
           <Text style={styles.loginText}>LOGIN</Text>
@@ -246,7 +252,7 @@ function ProfileScreen({ route, navigation }) {
       <View style={styles.body}>
         <View style={styles.bodyContent}>
           <View style={styles.buttonContainer}>
-            <Text>{JSON.stringify(user.paramKeys.id)}</Text>
+            <Text>{JSON.stringify(user.paramKeys.name)}</Text>
           </View>
           <View style={styles.buttonContainer}>
             <Text>{user.email}</Text>
@@ -484,6 +490,7 @@ function ManageScreen({ navigation }) {
 function MyTabs({ route, navigation }) {
   const { paramKeys } = route.params;
   const { email } = route.params;
+  const { token } = route.params;
   const { password } = route.params;
   // console.log("Test: " + paramKeys.success);
   // console.log("email: " + email);
@@ -568,23 +575,69 @@ function MyTabs({ route, navigation }) {
   );
 }
 
-function homeScreen({ navigation }) {
-  // console.log("Testing regular object: " + route.params.paramKey);
-  // console.log(route.params.paramKey);
+function homeScreen({ route, navigation }) {
+  const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
+  console.log(
+    "homescreen: parent params",
+    parentState.routes[parentState.index].params
+  );
+  const user = parentState.routes[parentState.index].params;
+  console.log("USER:::::" + user.email);
+  try {
+    let response = fetch(
+      "https://budgetmanagerpro.herokuapp.com/users/" +
+        user.paramKeys._id +
+        "/budgets",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + user.token
+        }
+      }
+    );
+    res = response.json();
+  } catch (err) {
+    console.log(err);
+  }
+
   return (
-    <View>
-      <View>
-        <Home />
-      </View>
-      <View style={styles.Home}>
-        <TouchableOpacity onPress={() => navigation.navigate("Manage")}>
-          <Text style={styles.navBudget}>Manage Budget</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Spending")}>
-          <Text style={styles.navBudget}>View Spending</Text>
-        </TouchableOpacity>
-      </View>
+    // <View>
+    <View style={styles.homeContainer}>
+      <Header />
+      <Text style={styles.Welcome}> Welcome Back</Text>
+      <Text style={styles.textStyle}>Todays date is </Text>
+      <Text style={styles.Current}>Current Monthly Budget: </Text>
+      <Text style={styles.Budget}>[monthly budget]</Text>
+      <Text style={styles.Current}>Current Weekly Budget: </Text>
+      <Text style={styles.daily}>[weekly budget]</Text>
+      <VictoryPie
+        height={350}
+        colorScale={[
+          "#68A047",
+          "#FFDD0E",
+          "#E9AE0B",
+          "#526c5b",
+          "#dcdcbb",
+          "#fa6e06",
+          "#244c3c",
+          "#590202",
+          "#a7bf50"
+        ]}
+        data={[
+          { x: 1, y: 3, label: "Rent" },
+          { x: 2, y: 3, label: "Subscriptions" },
+          { x: 3, y: 3, label: "OnlyFans" }
+        ]}
+      />
+      <Text style={styles.Body}>
+        It looks like you are currently [-$difference] according to your current
+        budget. lets fix that
+      </Text>
     </View>
+    // </View>
+    // </View>
   );
 }
 
@@ -682,6 +735,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingBottom: 100
   },
+  homeContainer: {
+    flex: 1,
+    // backgroundColor: "#68A047",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   LoginContainer: {
     flex: 1,
     backgroundColor: "#68A047",
@@ -730,6 +789,44 @@ const styles = StyleSheet.create({
     marginTop: 0,
     alignContent: "center",
     justifyContent: "center"
+  },
+  Current: {
+    marginTop: 10,
+    fontSize: 30,
+    alignItems: "center"
+  },
+  Welcome: {
+    marginTop: 30,
+    fontSize: 30,
+    alignItems: "center"
+  },
+  Date: {
+    marginTop: 10,
+    fontSize: 20,
+    alignItems: "center"
+  },
+  Budget: {
+    marginTop: 10,
+    fontSize: 50,
+    color: "green",
+    alignItems: "center"
+  },
+  daily: {
+    marginTop: 10,
+    fontSize: 50,
+    color: "green",
+    alignItems: "center"
+  },
+  Body: {
+    fontSize: 20,
+    alignItems: "center",
+    textAlign: "center"
+  },
+  red: {
+    marginTop: 40,
+    fontSize: 20,
+    color: "red",
+    alignItems: "center"
   },
   Home: {
     marginTop: 25,
