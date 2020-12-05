@@ -38,21 +38,6 @@ router.get('/users', function(req, res) {
     });
 });
 
-// router.post('/test', async (req, res) => {
-//     const msg = {
-//         to: 'luizgustavorocco@gmail.com',
-//         from: 'budgetmanagerproapp@gmail.com',
-//         subject: 'test',
-//         text: "TESTING."
-//     }
-//     try {
-//         await sgMail.send(msg).then((response) => console.log(response));
-//         res.send({ text: "OK."});
-//     } catch(error) {
-//         console.log(error);
-//     }
-// });
-
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {  
     req.body.emailToken = crypto.randomBytes(64).toString('hex');
@@ -156,7 +141,7 @@ router.get('/password-reset', async function(req, res, next) {
 });
 
 // API endpoint - delete user by id
-router.delete('/users/:id', function(req, res) {
+router.delete('/users/:id', verifyToken, function(req, res) {
     //res.send({ type: 'DELETE' });
 
     // find user document by id, delete
@@ -171,7 +156,7 @@ router.delete('/users/:id', function(req, res) {
 })
 
 // API endpoint - get list of all THIS users budgets
-router.get('/users/:id/budgets', function(req, res) {
+router.get('/users/:id/budgets', verifyToken, function(req, res) {
     // user_id?
     //user_id = req.session.passport.user;
     //res.send(req.params.id);
@@ -193,7 +178,7 @@ router.get('/users/:id/budgets', function(req, res) {
 });
 
 // API endpoint - post new budget
-router.post('/users/:id/budgets', function(req, res, next) {
+router.post('/users/:id/budgets', verifyToken, function(req, res, next) {
     //
     console.log(req.body)
 
@@ -216,7 +201,7 @@ router.post('/users/:id/budgets', function(req, res, next) {
 });
 
 // API endpoint - update budget by user id
-router.put('/users/:id/budgets/:budget_id', function(req, res) {
+router.put('/users/:id/budgets/:budget_id', verifyToken, function(req, res) {
     // create a new user object based on Budget model
     updatedBudget = new Budget(req.body);
 
@@ -235,7 +220,7 @@ router.put('/users/:id/budgets/:budget_id', function(req, res) {
 });
 
 // API endpoint - delete budget by user id
-router.delete('/users/:id/budgets/:budget_id', function(req, res) {
+router.delete('/users/:id/budgets/:budget_id', verifyToken, function(req, res) {
     // create a new user object based on Budget model
     //updatedBudget = new Budget(req.body);
 
