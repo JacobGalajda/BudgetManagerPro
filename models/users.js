@@ -19,6 +19,17 @@ const UsersSchema = new Schema({
     password: {
         type: String,
         //required: [true, 'Password field is required']
+
+    },
+    email_token: {
+        type: String,
+        default: ''
+            //required: [true, 'Password field is required']
+    },
+    user_budgets: {
+        type: [Budget.schema],
+        default: []
+
     },
     created_at: {
         type: String,
