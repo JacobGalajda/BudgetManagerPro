@@ -41,6 +41,7 @@ router.post('/login', function(req, res, next) {
                         user.token = generatedToken;
                         res.send({
                             success: true,
+                            token: generatedToken,
                             user: user
                         });
                     } else {
