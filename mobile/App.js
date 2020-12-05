@@ -583,24 +583,45 @@ function homeScreen({ route, navigation }) {
   );
   const user = parentState.routes[parentState.index].params;
   console.log("USER:::::" + user.email);
-  try {
-    let response = fetch(
-      "https://budgetmanagerpro.herokuapp.com/users/" +
-        user.paramKeys._id +
-        "/budgets",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer" + user.token
-        }
-      }
-    );
-    res = response.json();
-  } catch (err) {
-    console.log(err);
-  }
+  // OPTION 1 
+  // apiCall = async () => {
+  //   try {
+  //     let response = fetch(
+  //       "https://budgetmanagerpro.herokuapp.com/users/" +
+  //         user.paramKeys._id +
+  //         "/budgets",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //           Authorization: "Bearer" + user.token
+  //         }
+  //       }
+  //     );
+  //     res = response.json();
+  //   } catch (err) {
+  //       console.log(err);
+  //   }
+  // }
+
+  // OPTION 2
+  // fetch("https://budgetmanagerpro.herokuapp.com/users/" +
+  //   user.paramKeys._id +
+  //   "/budgets", 
+  //   {
+  //     method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer" + user.token
+  //       }
+  //   }
+  // ).then(response => response.json())
+  // .then((responseJson) => {
+  //    //DO SOMETHING WITH THE DATA LIKE POPULATE THE GRAPH
+  // })
+  // .catch(error => console.log(error))
 
   return (
     // <View>
