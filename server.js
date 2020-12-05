@@ -34,7 +34,7 @@ mongoose.connection.on('error', function(error) {
     console.log('Mongoose Connection Error : ' + error);
 });
 
-app.use(cors())
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
