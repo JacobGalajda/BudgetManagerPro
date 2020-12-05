@@ -1,18 +1,18 @@
 // routes/index.js
 
 // require dotenv
-require('dotenv').config();
+//require('dotenv').config();
 
 // require express
 const express = require('express');
 
-//require config variable
+// require config variable
 const config = require('../config');
 
-// flash
-const flash = require('connect-flash');
+// require verifyToken
+const verifyToken = require('./verifyToken');
 
-//require sendgrid/mail
+// require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SendGrid);
 //require crypto
@@ -25,6 +25,7 @@ const router = express.Router();
 // import Users/Budget database model
 const Users = require('../models/users');
 const Budget = require('../models/budget');
+const { getMaxListeners } = require('../models/budget');
 
 
 
@@ -124,7 +125,7 @@ router.get('/verify-email', async (req, res, next) => {
 });
 
 // API endpoint - update user
-router.put('/users/:id', function(req, res) {
+router.put('/users/:id', verifyToken, function(req, res) {
     // find user document by id and update with request body
     Users.findOneAndUpdate({ _id: req.params.id }, req.body).then(function() {
         // check if this works by finding User's unique _id and checking for update
@@ -133,6 +134,25 @@ router.put('/users/:id', function(req, res) {
             res.send(user);
         });
     });
+});
+
+// Password reset
+router.get('/password-reset', async function(req, res, next) {
+    try {
+        const msg = {
+            to: req.body.email,
+            from: 'budgetmanagerproapp@gmail.com',
+            subject: 'Budget Manager Pro - Reset your password.',
+            text: 
+            `
+            Hello, 
+            Please copy and paste the link below to reset your password.
+            http//:
+            `
+        }
+    }catch {
+        ;
+    }
 });
 
 // API endpoint - delete user by id
@@ -170,7 +190,6 @@ router.get('/users/:id/budgets', function(req, res) {
         res.json(user.user_budgets)
 
     });
-
 });
 
 // API endpoint - post new budget

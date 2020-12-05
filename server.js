@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
-require('dotenv').config();
+//require('dotenv').config();
 // import config files
 const config = require('./config');
 
