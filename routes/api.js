@@ -38,95 +38,95 @@ router.get('/users', function(req, res) {
     });
 });
 
-// API endpoint - post new user
-router.post('/users', async function(req, res, next) {  
-    req.body.emailToken = crypto.randomBytes(64).toString('hex');
-    Users.create(req.body).then(async function(user) {
-        const msg = {
-            to: req.body.email,
-            from: 'budgetmanagerproapp@gmail.com',
-            subject: 'Budget Manager Pro - Verify your account',
-            text: 
-             `
-            Hello, thanks for registering on our website.
-            Please copy and paste the address below to verify your account.
-            http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
-            `
-            ,
-            html: 
-            `
-            <h1> Hello,</h1>
-            <p>Thanks for registering on our website,</p>
-            <p>Please click the link below to verify your account.</p>
-            <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
-            `
-        };
-        try {
-            await sgMail.send(msg).then((response) => {
-                res.send({
-                    success: true,
-                    message: 'Thank you for registering. Please check your email to verify your account.'             
-                });
-            });           
-        } catch(error) {
-            console.log(error);
-            res.status(401).send({
-                success: false,
-                message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
-            });
-        }
-    }).catch(next);
-});
+// // API endpoint - post new user
+// router.post('/users', async function(req, res, next) {  
+//     req.body.emailToken = crypto.randomBytes(64).toString('hex');
+//     Users.create(req.body).then(async function(user) {
+//         const msg = {
+//             to: req.body.email,
+//             from: 'budgetmanagerproapp@gmail.com',
+//             subject: 'Budget Manager Pro - Verify your account',
+//             text: 
+//              `
+//             Hello, thanks for registering on our website.
+//             Please copy and paste the address below to verify your account.
+//             http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
+//             `
+//             ,
+//             html: 
+//             `
+//             <h1> Hello,</h1>
+//             <p>Thanks for registering on our website,</p>
+//             <p>Please click the link below to verify your account.</p>
+//             <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
+//             `
+//         };
+//         try {
+//             await sgMail.send(msg).then((response) => {
+//                 res.send({
+//                     success: true,
+//                     message: 'Thank you for registering. Please check your email to verify your account.'             
+//                 });
+//             });           
+//         } catch(error) {
+//             console.log(error);
+//             res.status(401).send({
+//                 success: false,
+//                 message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
+//             });
+//         }
+//     }).catch(next);
+// });
 
-// Email verification route
-router.get('/verify-email', async (req, res, next) => {
-    try {
-        const user = await Users.findOne({ emailToken: req.query.token });
-        if (!user) {
-            res.status(401).send({
-                success: false,
-                message: "Token is invalid. Please contact us for assistance."
-            });
-        }
-        user.emailToken = null;
-        user.verified = true;
-        await user.save();
-        const html = `
-        <p style="text-align:center">Your account is verified.</p>
-        <button onclick="window.location.href='://budgetmanagerpro.herokuapp.com';"> Login </button>
-        `
-        res.send(html);
-        // res.send({
-        //     success: true,
-        //     message: "User verified."
-        // });
-    } catch(error) {
-        console.log(error);
-        res.status(401).send({
-            success: false,
-            message: "Verification failed. Please contact us for assistance."
-        });
-    }
-});
+// // // Email verification route
+// // router.get('/verify-email', async (req, res, next) => {
+// //     try {
+// //         const user = await Users.findOne({ emailToken: req.query.token });
+// //         if (!user) {
+// //             res.status(401).send({
+// //                 success: false,
+// //                 message: "Token is invalid. Please contact us for assistance."
+// //             });
+// //         }
+// //         user.emailToken = null;
+// //         user.verified = true;
+// //         await user.save();
+// //         const html = `
+// //         <p style="text-align:center">Your account is verified.</p>
+// //         <button onclick="window.location.href='://budgetmanagerpro.herokuapp.com';"> Login </button>
+// //         `
+// //         res.send(html);
+// //         // res.send({
+// //         //     success: true,
+// //         //     message: "User verified."
+// //         // });
+// //     } catch(error) {
+// //         console.log(error);
+// //         res.status(401).send({
+// //             success: false,
+// //             message: "Verification failed. Please contact us for assistance."
+// //         });
+// //     }
+// // });
 
-// Password reset
-router.get('/password-reset', async function(req, res, next) {
-    try {
-        const msg = {
-            to: req.body.email,
-            from: 'budgetmanagerproapp@gmail.com',
-            subject: 'Budget Manager Pro - Reset your password.',
-            text: 
-            `
-            Hello, 
-            Please copy and paste the link below to reset your password.
-            http//:
-            `
-        }
-    }catch {
-        ;
-    }
-});
+// // // Password reset
+// // router.get('/password-reset', async function(req, res, next) {
+// //     try {
+// //         const msg = {
+// //             to: req.body.email,
+// //             from: 'budgetmanagerproapp@gmail.com',
+// //             subject: 'Budget Manager Pro - Reset your password.',
+// //             text: 
+// //             `
+// //             Hello, 
+// //             Please copy and paste the link below to reset your password.
+// //             http//:
+// //             `
+// //         }
+// //     }catch {
+// //         ;
+// //     }
+// // });
 
 // API endpoint - update user
 router.put('/users/:id', verifyToken, function(req, res) {
