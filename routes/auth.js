@@ -38,13 +38,9 @@ router.post('/login', function(req, res, next) {
                         }
                         console.log(user);
                         let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {expiresIn: '30m'});
-                        res.send({
-                            success: true,
-                            message: "User found.",
-                            token: generatedToken,
-                            id: user.id,
-                            name: user.name
-                        });
+                        user.verified = true;
+                        user.token = generatedToken;
+                        res.send(user);
                     } else {
                         res.status(401).send({
                             success: false,
