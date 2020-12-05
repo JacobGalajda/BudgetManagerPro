@@ -178,7 +178,7 @@ router.get('/users/:id/budgets', verifyToken, function(req, res) {
 });
 
 // API endpoint - post new budget
-router.post('/users/:id/budgets', verifyToken, function(req, res, next) {
+router.post('/users/:id/budgets', function(req, res, next) {
     //
     console.log(req.body)
 
