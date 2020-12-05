@@ -156,7 +156,7 @@ router.delete('/users/:id', verifyToken, function(req, res) {
 })
 
 // API endpoint - get list of all THIS users budgets
-router.get('/users/:id/budgets', verifyToken, function(req, res) {
+router.get('/users/:id/budgets', function(req, res) {
     // user_id?
     //user_id = req.session.passport.user;
     //res.send(req.params.id);
@@ -178,7 +178,7 @@ router.get('/users/:id/budgets', verifyToken, function(req, res) {
 });
 
 // API endpoint - post new budget
-router.post('/users/:id/budgets', verifyToken, function(req, res, next) {
+router.post('/users/:id/budgets', function(req, res, next) {
     //
     console.log(req.body)
 
