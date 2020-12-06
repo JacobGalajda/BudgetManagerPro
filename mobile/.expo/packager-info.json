@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 34203,
+  "packagerPort": 19005,
+  "packagerPid": 94649,
   "expoServerNgrokUrl": "https://v9-5az.cooperurich.mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.v9-5az.cooperurich.mobile.exp.direct",
-  "ngrokPid": 89504,
+  "ngrokPid": 95637,
   "webpackServerPort": null
 }

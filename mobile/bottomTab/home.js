@@ -19,46 +19,13 @@ const Home = () => {
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
+
     setCurrentDate(month + "/" + date + "/" + year + " ");
   }, []);
 
   return (
     <View>
-      <Header />
-      <View style={styles.container}>
-        <Text style={styles.Welcome}> Welcome Back</Text>
-        <Text style={styles.textStyle}>Todays date is {currentDate}</Text>
-        <Text style={styles.Current}>Current Monthly Budget: </Text>
-        <Text style={styles.Budget}>[monthly budget]</Text>
-        <Text style={styles.Current}>Current Weekly Budget: </Text>
-        <Text style={styles.daily}>[weekly budget]</Text>
-        <VictoryPie
-          height={350}
-          colorScale={[
-            "#68A047",
-            "#FFDD0E",
-            "#E9AE0B",
-            "#526c5b",
-            "#dcdcbb",
-            "#fa6e06",
-            "#244c3c",
-            "#590202",
-            "#a7bf50"
-          ]}
-          data={[
-            { x: 1, y: 3, label: "Rent" },
-            { x: 2, y: 3, label: "Subscriptions" },
-            { x: 3, y: 3, label: "OnlyFans" }
-          ]}
-        />
-        <Text style={styles.Body}>
-          It looks like you are currently [-$difference] according to your
-          current budget. lets fix that
-        </Text>
-      </View>
+      <Text style={styles.textStyle}>Todays date is {currentDate}</Text>
     </View>
   );
 };

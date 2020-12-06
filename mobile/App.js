@@ -252,7 +252,7 @@ function ProfileScreen({ route, navigation }) {
       <View style={styles.body}>
         <View style={styles.bodyContent}>
           <View style={styles.buttonContainer}>
-            <Text>{JSON.stringify(user.paramKeys.name)}</Text>
+            <Text>{user.paramKeys.name}</Text>
           </View>
           <View style={styles.buttonContainer}>
             <Text>{user.email}</Text>
@@ -492,13 +492,6 @@ function MyTabs({ route, navigation }) {
   const { email } = route.params;
   const { token } = route.params;
   const { password } = route.params;
-  // console.log("Test: " + paramKeys.success);
-  // console.log("email: " + email);
-  // console.log("password: " + password);
-  //function MyTabs({ props }) {
-  //console.log(route.params.paramKey);
-  //console.log(route.id);
-  // const response = this.props.navigation.getParam("Login");
 
   return (
     <Tab.Navigator
@@ -516,18 +509,6 @@ function MyTabs({ route, navigation }) {
         }
       }}
     >
-      {/* <Tab.Screen
-        name="Budget"
-        component={BudgetStack}
-        options={{
-          headerShown: false
-        }}
-        NavigationOptions={{
-          tabBarIcon: ({ tintColor }) => (
-            <Icon name="Icon" size={30} color="#900" />
-          )
-        }}
-      /> */}
       <Tab.Screen
         name="Manage"
         component={ManageScreen}
@@ -548,25 +529,13 @@ function MyTabs({ route, navigation }) {
           )
         }}
       />
-      {/* <Tab.Screen
-        name="Spending"
-        component={SpendingScreen}
-        options={{
-          headerShown: false
-        }}
-      /> */}
+
       <Tab.Screen
         name="Profile"
-        // component={() => <ProfileScreen propName={paramKeys} />}
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <Icon
-              name="ios-person"
-              color={color}
-              size={25}
-              // focused={focused}
-            />
+            <Icon name="ios-person" color={color} size={25} />
           )
         }}
         headerMode="none"
@@ -576,89 +545,96 @@ function MyTabs({ route, navigation }) {
 }
 
 function homeScreen({ route, navigation }) {
+  state: {
+  }
+  var pieData;
   const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
   console.log(
     "homescreen: parent params",
     parentState.routes[parentState.index].params
   );
   const user = parentState.routes[parentState.index].params;
-  console.log("USER:::::" + user.email);
-  // OPTION 1 
-  // apiCall = async () => {
-  //   try {
-  //     let response = fetch(
-  //       "https://budgetmanagerpro.herokuapp.com/users/" +
-  //         user.paramKeys._id +
-  //         "/budgets",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //           Authorization: "Bearer" + user.token
-  //         }
-  //       }
-  //     );
-  //     res = response.json();
-  //   } catch (err) {
-  //       console.log(err);
-  //   }
-  // }
 
-  // OPTION 2
-  // fetch("https://budgetmanagerpro.herokuapp.com/users/" +
-  //   user.paramKeys._id +
-  //   "/budgets", 
-  //   {
-  //     method: "POST",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //         Authorization: "Bearer" + user.token
-  //       }
-  //   }
-  // ).then(response => response.json())
-  // .then((responseJson) => {
-  //    //DO SOMETHING WITH THE DATA LIKE POPULATE THE GRAPH
-  // })
-  // .catch(error => console.log(error))
+  const string =
+    "https://budgetmanagerpro.herokuapp.com/api/users/" +
+    user.paramKeys._id +
+    "/budgets";
+  console.log("Returned String:::::" + string);
+  pieData = fetch(string, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + user.token
+    }
+  })
+    .then(response => response.json())
+    .then(responseJson => {
+      // console.log(
+      //   "Expense name::: " + responseJson[0].budget_expense[0].expense_name
+      // );
+      // console.log(
+      //   "Expense cost::: " + responseJson[0].budget_expense[0].expense_cost
+      // );
 
+      let data = []; // EMPTY JSON ARRAY
+      let expenseLength = responseJson[0].budget_expense.length; //logging array length to see if it works
+      console.log(responseJson[0].budget_expense[0].expense_name); //logging expense name to see if it is a string
+
+      for (var i = 0; i < expenseLength; i++) {
+        var object = {
+          x: responseJson[0].budget_expense[i].expense_name, //maybe a string maybe not
+          y: responseJson[0].budget_expense[i].expense_cost //already a number
+        };
+        data.push(object);
+      }
+
+      // this.setState({ pieData });
+      pieData = JSON.stringify(data);
+      console.log(pieData); //ACTUALLY PRINTS
+      return pieData;
+    })
+    .catch(error => console.log(error));
+  console.log("Pie Data: " + pieData.x[0]); // UNDEFINED
+  //console.log("Pie Data: " + responseJson);
   return (
-    // <View>
-    <View style={styles.homeContainer}>
-      <Header />
-      <Text style={styles.Welcome}> Welcome Back</Text>
-      <Text style={styles.textStyle}>Todays date is </Text>
-      <Text style={styles.Current}>Current Monthly Budget: </Text>
-      <Text style={styles.Budget}>[monthly budget]</Text>
-      <Text style={styles.Current}>Current Weekly Budget: </Text>
-      <Text style={styles.daily}>[weekly budget]</Text>
-      <VictoryPie
-        height={350}
-        colorScale={[
-          "#68A047",
-          "#FFDD0E",
-          "#E9AE0B",
-          "#526c5b",
-          "#dcdcbb",
-          "#fa6e06",
-          "#244c3c",
-          "#590202",
-          "#a7bf50"
-        ]}
-        data={[
-          { x: 1, y: 3, label: "Rent" },
-          { x: 2, y: 3, label: "Subscriptions" },
-          { x: 3, y: 3, label: "OnlyFans" }
-        ]}
-      />
-      <Text style={styles.Body}>
-        It looks like you are currently [-$difference] according to your current
-        budget. lets fix that
-      </Text>
+    <View>
+      <View>
+        <Header />
+        <ScrollView>
+          <View style={styles.homeContainer}>
+            <Text style={styles.Welcome}>
+              {" "}
+              Welcome Back {user.paramKeys.name}!
+            </Text>
+            <Home />
+            <Text style={styles.Current}>Current Monthly Budget: </Text>
+            <Text style={styles.Budget}>[monthly budget]</Text>
+            <Text style={styles.Current}>Current Weekly Budget: </Text>
+            <Text style={styles.daily}>[weekly budget]</Text>
+            <VictoryPie
+              height={350}
+              colorScale={[
+                "#68A047",
+                "#FFDD0E",
+                "#E9AE0B",
+                "#526c5b",
+                "#dcdcbb",
+                "#fa6e06",
+                "#244c3c",
+                "#590202",
+                "#a7bf50"
+              ]}
+              data={pieData}
+            />
+            <Text style={styles.Body}>
+              It looks like you are currently [-$difference] according to your
+              current budget. lets fix that
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     </View>
-    // </View>
-    // </View>
   );
 }
 
@@ -758,7 +734,6 @@ const styles = StyleSheet.create({
   },
   homeContainer: {
     flex: 1,
-    // backgroundColor: "#68A047",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -779,8 +754,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-
-    paddingTop: 30
+    paddingBottom: 1000,
+    paddingTop: 100
   },
   container3: {
     flex: 1,
@@ -880,7 +855,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    marginBottom: 10
+    marginBottom: 80
   },
   loginBtn1: {
     width: "80%",
