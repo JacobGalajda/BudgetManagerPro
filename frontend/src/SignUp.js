@@ -2,17 +2,17 @@ import './App.css';
 import './index.css'
 import './budgetFormatting.css'
 import React, {Component, useState} from 'react';
-
-import bootsrap, { Button, Badge, Container } from 'react-bootstrap';
+import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import bootsrap, { Button, Badge, Container, Nav } from 'react-bootstrap';
 
 class SignUp extends Component {
     render() {
         return (
             <div className="center-main">
-                <Container className="themed-container">
+                <Container className="themed-container center">
                 <br></br>
                 <br></br>
-                <h1 className="center">Budget Manager <Badge>Pro</Badge></h1>
+                <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
                 <br></br>
                 <br></br>
                 <h6 className="center">A place to organize finances to ensure that they are within their financial scopes.</h6>
@@ -24,10 +24,14 @@ class SignUp extends Component {
                     <input type="text" id="loginName" placeholder="Username"></input>
                     <input type="password" id="loginPassword1" placeholder="Password"></input>
                     <input type="password" id="loginPassword2" placeholder="Confirm Password"></input>
-                    <Button id="loginButton" onclick="">Sign Up</Button>
-                    <a href="">Return Home</a>
-                    <br></br>
+                    <Button id="signUpButton" onclick="">Sign Up</Button>
                     </form>
+                    <br></br>
+                    <Nav className="flex-column">
+                        <Nav.Item>
+                            <Nav.Link href="login">Back to Login</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
                 </div>
                 </Container>
             </div>

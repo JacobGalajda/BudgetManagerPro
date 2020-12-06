@@ -4,10 +4,14 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import PopUp from './PopUp';
+import TestPopUp from './TestPopUp'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    
+    <App/>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

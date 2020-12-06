@@ -7,6 +7,8 @@ import bootsrap from 'react-bootstrap';
 import SignUp from './SignUp';
 import ForgotPassword from './ForgotPassword';
 import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import Landing from './Landing';
+import PopUp from './PopUp';
 
 class App extends Component {
   render() {
@@ -16,21 +18,18 @@ class App extends Component {
           <Route path="/login">
             <Login/>
           </Route>
-        </Switch>
-        <Switch>
           <Route path="/signUp">
             <SignUp/>
           </Route>
-        </Switch>
-        <Switch>
           <Route path="/forgotPassword">
             <ForgotPassword/>
           </Route>  
-        </Switch>
-      <Switch>
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <Route path="/landing">
+            <Landing/>
+          </Route>
       </Switch>
       </BrowserRouter>
     );
