@@ -3,6 +3,8 @@ import './index.css'
 import './budgetFormatting.css'
 import React, {Component, useState} from 'react';
 import bootstrap, { Button, Badge, Container, Col, Row, Navbar, Form, FormControl } from 'react-bootstrap';
+import victory, { VictoryPie } from 'victory';
+
 export default class Landing extends Component {
     
     render() {
@@ -24,8 +26,26 @@ export default class Landing extends Component {
                     <br></br>
                     <br></br>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
-                    <br></br>
-                    <h3 className="center">Welcome, JaCrispy</h3>
+
+                    <VictoryPie
+                        data={[
+                            { x: "Cats", y: 35 },
+                            { x: "Dogs", y: 40 },
+                            { x: "Birds", y: 55 }
+                          ]}
+                          colorScale={[
+                            "#FFDD0E",
+                            "#E9AE0B",
+                            "#526c5b",
+                            "#dcdcbb",
+                            "#fa6e06",
+                            "#244c3c",
+                            "#590202",
+                            "#a7bf50"
+                          ]}
+                          style={{ labels: { fill: "white", fontSize: 4, fontWeight: "bold" } }}
+                    >
+                    </VictoryPie>
                 </Container>
 
             </div>
