@@ -15,19 +15,19 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/login">
+          <Route path="/login" exact>
             <Login/>
           </Route>
-          <Route path="/signUp">
+          <Route path="/signUp" exact>
             <SignUp/>
           </Route>
-          <Route path="/forgotPassword">
+          <Route path="/forgotPassword" exact>
             <ForgotPassword/>
           </Route>  
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
-          <Route path="/landing">
+          <Route path="/landing" exact>
             <Landing/>
           </Route>
       </Switch>

@@ -14,7 +14,7 @@ const verifyToken = require('./verifyToken');
 
 // require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SendGrid);
+sgMail.setApiKey('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');
 //require crypto
 const crypto = require('crypto');
 
@@ -41,13 +41,12 @@ router.get('/users', verifyToken, function(req, res) {
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {  
     req.body.emailToken = crypto.randomBytes(64).toString('hex');
-    const budget = new Budget({
-        budget_category: 'Personal',
-        budget_name: 'Global',
-        budget_expense: [{}]
-    });
-    //req.body.user_budgets = [Budget]; // either this
-    req.body.user_budgets.push(budget); //or this
+    // const budget = new Budget({
+    //     budget_category: 'Personal',
+    //     budget_name: 'Global',
+    //     budget_expense: [{}]
+    // });
+    // req.body.user_budgets = [Budget]; // either this
     Users.create(req.body).then(async function(user) {
         const msg = {
             to: req.body.email,
@@ -70,6 +69,7 @@ router.post('/users', async function(req, res, next) {
         };
         try {
             await sgMail.send(msg).then((response) => {
+                console.log(response);
                 res.send({
                     success: true,
                     message: 'Thank you for registering. Please check your email to verify your account.'             
