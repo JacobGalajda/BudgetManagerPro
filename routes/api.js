@@ -24,10 +24,10 @@ const nodemailer = require('nodemailer');
 // google apis
 const { google } = require('googleapis');
 
-const CLIENT_ID = '963729588928-9qhcps2dnkr8unndtg4imbgi01b11rds.apps.googleusercontent.com';
-const CLIENT_SECRET = 'ht4D0ATpWUr7DHRlJ9zNPcII';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//048hnQ6NVnH0yCgYIARAAGAQSNwF-L9IrUZCMTPZCeml5BEfsLZfcGoBp5DVvniXzW1OzC_XNBHtHqNG2KJU-h06qpnyoeQZxemE';
+// const CLIENT_ID = '963729588928-9qhcps2dnkr8unndtg4imbgi01b11rds.apps.googleusercontent.com';
+// const CLIENT_SECRET = 'ht4D0ATpWUr7DHRlJ9zNPcII';
+// const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+// const REFRESH_TOKEN = '1//048hnQ6NVnH0yCgYIARAAGAQSNwF-L9IrUZCMTPZCeml5BEfsLZfcGoBp5DVvniXzW1OzC_XNBHtHqNG2KJU-h06qpnyoeQZxemE';
 
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
@@ -134,7 +134,7 @@ router.get('/verify-email', async (req, res, next) => {
         await user.save();
         const html = `
         <p style="text-align:center">Your account is verified.</p>
-        <button onclick="window.location.href='://budgetmanagerpro.herokuapp.com';"> Login </button>
+        <button onclick= href='https://budgetmanagerpro.herokuapp.com/';"> Login </button>
         `
         res.send(html);
         // res.send({
