@@ -18,13 +18,13 @@ class SignUp extends Component {
                 <h6 className="center">A place to organize finances to ensure that they are within their financial scopes.</h6>
                 <div className="white-box">
                     <form className="box center" action="" method="">
-                    <p id="loginResult"></p>
-                    <input type="text" id="loginName" placeholder="Email"></input>
-                    <input type="text" id="loginPhone" placeholder="Phone"></input>
-                    <input type="text" id="loginName" placeholder="Username"></input>
-                    <input type="password" id="loginPassword1" placeholder="Password"></input>
-                    <input type="password" id="loginPassword2" placeholder="Confirm Password"></input>
-                    <Button id="signUpButton" onclick="">Sign Up</Button>
+                        <p id="loginResult"></p>
+                        <input type="text" id="Email" placeholder="Email"></input>
+                        <input type="text" id="Phone" placeholder="Phone"></input>
+                        <input type="text" id="UserName" placeholder="Username"></input>
+                        <input type="password" id="Password1" placeholder="Password"></input>
+                        <input type="password" id="Password2" placeholder="Confirm Password"></input>
+                        <Button id="SignUpButton" onclick="">Sign Up</Button>
                     </form>
                     <br></br>
                     <Nav className="flex-column">

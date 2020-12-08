@@ -20,10 +20,10 @@ class ForgotPassword extends Component {
                     <form className="box center">
                     <p id="loginResult"></p>
                     
-                    <input type="text" id="email" placeholder="Email"></input>
-                    <input type="password" id="loginName" placeholder="UserName"></input>
+                    <input type="text" id="Email" placeholder="Email"></input>
+                    <input type="password" id="UserName" placeholder="UserName"></input>
                     <br></br>
-                    <Button id="forgotButton" onclick="">Submit</Button>
+                    <Button id="ForgotPasswordButton" onclick="">Submit</Button>
                     </form>
                     <Nav className="flex-column">
                         <Nav.Item>

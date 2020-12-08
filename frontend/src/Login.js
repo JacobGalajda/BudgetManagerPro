@@ -20,10 +20,10 @@ class Login extends Component {
                     <form className="box center">
                     <p id="loginResult"></p>
                     
-                    <input type="text" id="loginName" placeholder="Email"></input>
-                    <input type="password" id="loginPassword" placeholder="Password"></input>
+                    <input type="text" id="Email" placeholder="Email"></input>
+                    <input type="password" id="Password" placeholder="Password"></input>
                 
-                    <Button id="loginButton" onclick="">Login</Button>
+                    <Button id="LoginButton" onclick="">Login</Button>
                     <br></br>
                     <Nav className="flex-column">
                         <Nav.Item>
