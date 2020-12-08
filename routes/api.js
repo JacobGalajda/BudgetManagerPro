@@ -161,7 +161,7 @@ router.get('/password-reset', async function(req, res, next) {
             `
             Hello, 
             Please copy and paste the link below to reset your password.
-            http//:
+            http://budgetmanagerpro.herokuapp.com/forgotPassword
             `
         }
     }catch {

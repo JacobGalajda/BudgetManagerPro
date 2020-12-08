@@ -15,12 +15,12 @@ const commands = {
     help: {
         fn: args => {
             return `
-            clear                                                                  # Refresh the terminal screen
-            add <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                              # Adds a new Item to your budget
-            edit <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                             # Edit an existing Item in your budget
-            delete <ITEM_NAME>                                                     # Delete an Item from your budget
-            update_profile <username OR password> <new value> <repeat new value>   # Update your profile name or password
-            burn_account                                                           # PERMANATELY delete your account
+            clear
+            add <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]
+            edit <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]
+            delete <ITEM_NAME>
+            update_profile <username OR password> <new value> <repeat new value>
+            burn_account
             `
         }
     },
@@ -60,7 +60,10 @@ export default class Landing extends Component {
     
     render() {
         return (
-            <div>
+            <Container>
+                <br></br>
+                <br></br>
+                <br></br>
                 <Navbar bg="dark" variant="dark" className="align-me">
                     <Navbar.Brand href="/login">
                         Budget Manager Pro
@@ -74,15 +77,14 @@ export default class Landing extends Component {
                 </Navbar>
 
                 <Container>
-                    <br></br>
-                    <br></br>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
-
-                    <VictoryPie height={200} padding={35}
+                    <br></br>
+                    <VictoryPie height={100} padding={25}
                         data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 55 }
+                            { x: "Beer", y: 35 },
+                            { x: "Drugz", y: 40 },
+                            { x: "Speeding Tickets", y: 55 },
+                            { x: "Gambling Debt", y: 100}
                           ]}
                           colorScale={[
                             "#FFDD0E",
@@ -94,7 +96,7 @@ export default class Landing extends Component {
                             "#590202",
                             "#a7bf50"
                           ]}
-                          style={{ labels: { fill: "white", fontSize: 8, fontWeight: "bold" } }}
+                          style={{ labels: { fill: "white", fontSize: 6 } }}
                     >
                     </VictoryPie>
 
@@ -115,7 +117,7 @@ export default class Landing extends Component {
                 
 
                 </Container>
-            </div>
+            </Container>
         );
     }
 };
