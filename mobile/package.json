@@ -49,6 +49,7 @@
     "react-native-screens": "~2.10.1",
     "react-native-searchable-dropdown": "^1.1.1",
     "react-native-svg": "12.1.0",
+    "react-native-table-component": "^1.2.1",
     "react-native-tcp": "^3.3.2",
     "react-native-udp": "^2.7.0",
     "react-native-vector-icons": "^7.1.0",

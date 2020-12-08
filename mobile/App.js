@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -23,11 +23,14 @@ import Manage from "./bottomTab/manage";
 import Spending from "./bottomTab/spending";
 import Forgot from "./screens/forgot";
 import ExpenseItem from "./bottomTab/expenseItem";
-import AddExpense from "./bottomTab/addExpense";
+// import AddExpense from "./bottomTab/addExpense";
 import ViewExpenses from "./bottomTab/viewExpenses";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import viewExpenses from "./bottomTab/viewExpenses";
 import Header from "./components/header";
+import { Checkbox } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 import {
   VictoryPie,
   VictoryBar,
@@ -203,14 +206,13 @@ class Login extends React.Component {
             } catch (err) {
               console.log(err);
             }
-
-            console.log("Verified: " + res.user.verified);
-            console.log("Success: " + res.success);
-            if (!res.success) {
+            // console.log("Verified::: " + res.verified);
+            // console.log("Success::: " + res.success);
+            if (res.success == false) {
               Alert.alert("Uh Oh!", "Email or Password is incorrect");
             }
             if (res.success) {
-              if (!res.user.verified) {
+              if (res.user.verified == false) {
                 Alert.alert(
                   "Uh Oh!",
                   "Please verify account before signing in!"
@@ -292,117 +294,156 @@ function ProfileScreen({ route, navigation }) {
     </ScrollView>
   );
 }
+function AddExpense({ submitHandler }) {
+  const [expenseName, setExpenseName] = useState("");
+  const [price, setPrice] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
 
-// function BudgetScreen({ navigation }) {
-//   return (
-//     <View>
-//       <View>
-//         <Budget />
-//         <View style={styles.budgetContainer}>
-//           <TouchableOpacity
-//             style={styles.loginBtn1}
-//             onPress={() => {
-//               navigation.navigate("PrevBudgets");
-//             }}
-//           >
-//             <Text style={styles.bugdetButton}>View Previous Budgets</Text>
-//           </TouchableOpacity>
-//           <VictoryChart height={500}>
-//             <VictoryLine
-//               style={{
-//                 data: { stroke: "#68A047" }
-//               }}
-//               data={[
-//                 { x: "August", y: 3250 },
-//                 { x: "July", y: 1540 },
-//                 { x: "September", y: 1890 },
-//                 { x: "November", y: 4260 },
-//                 { x: "December", y: 3540 }
-//               ]}
-//             />
-//             <VictoryLine
-//               style={{
-//                 data: { stroke: "#c43a31" }
-//               }}
-//               data={[
-//                 { x: "August", y: 3250 },
-//                 { x: "July", y: 4210 },
-//                 { x: "September", y: 4020 },
-//                 { x: "November", y: 3223 },
-//                 { x: "December", y: 1232 }
-//               ]}
-//             />
-//           </VictoryChart>
-//         </View>
-//       </View>
-//       <DropDownPicker
-//         items={[
-//           { label: "Two Months", value: "rent" },
-//           { label: "Three Months", value: "rent" },
-//           { label: "Six Months", value: "rent" },
-//           { label: "Nine Months", value: "rent" },
-//           { label: "1 Year", value: "rent" },
-//           { label: "2 Years", value: "rent" }
-//         ]}
-//         placeholder="Duration"
-//         containerStyle={{ height: 40 }}
-//         style={{ color: "#68A047" }}
-//         dropDownStyle={{ backgroundColor: "#fafafa" }}
-//       />
-//     </View>
-//   );
-// }
-// function BudgetHistoryScreen({ navigation }) {
-//   return (
-//     <View>
-//       <BudgetHistory />
-//       <VictoryChart theme={VictoryTheme.material} domainPadding={{ x: 15 }}>
-//         <VictoryBar
-//           barRatio={0.8}
-//           style={{
-//             data: { fill: "#c43a31" }
-//           }}
-//           data={[
-//             { x: 1, y: 2 },
-//             { x: 2, y: 3 },
-//             { x: 3, y: 5 },
-//             { x: 4, y: 4 },
-//             { x: 5, y: 6 }
-//           ]}
-//           height={300}
-//         />
-//       </VictoryChart>
-//     </View>
-//   );
-// }
-// const BStack = createStackNavigator();
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
 
-// function BudgetStack({ navigation }) {
-//   return (
-//     <BStack.Navigator>
-//       <BStack.Screen
-//         name="Budget"
-//         component={BudgetScreen}
-//         options={{
-//           headerShown: false
-//         }}
-//       />
-//       <BStack.Screen
-//         name="PrevBudgets"
-//         component={BudgetHistoryScreen}
-//         options={{
-//           headerShown: false
-//         }}
-//       />
-//     </BStack.Navigator>
-//   );
-// }
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
 
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+
+  const changeHandler = val => {
+    setExpenseName(val);
+    setPrice(val);
+  };
+
+  return (
+    <View>
+      <DropDownPicker
+        items={[
+          { label: "Rent", value: "rent" },
+          { label: "Utilites", value: "utilites" },
+          { label: "Subscriptions", value: "subscriptions" },
+          { label: "Gas", value: "gas" },
+          { label: "Groceries", value: "groceries" },
+          { label: "Student Loans", value: "groceries" },
+          { label: "Insurance", value: "insurance" },
+          { label: "Car", value: "car" }
+        ]}
+        placeholder="Expense Category"
+        containerStyle={{ height: 40 }}
+        style={{ color: "#68A047" }}
+        dropDownStyle={{ backgroundColor: "#fafafa" }}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="New Expense.."
+        onChangeText={changeHandler}
+      />
+      <TextInput
+        keyboardType="numeric"
+        style={styles.input}
+        placeholder="Price"
+        onChangeText={changeHandler}
+      />
+
+      {/* <Checkbox.Item
+        label="Has this Been Paid Already?"
+        labelStyle="#68A047"
+        status={checked ? "checked" : "unchecked"}
+        color="#68A047"
+        onPress={() => {
+          setChecked(!checked);
+        }}
+      /> */}
+      <View style={styles.container}>
+        <Text style={styles.time}>Select the Date The Expense is Due</Text>
+      </View>
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={date}
+        mode={mode}
+        is24Hour={true}
+        display="default"
+        onChange={onChange}
+      />
+      <DropDownPicker
+        items={[
+          { label: "One Time Expense", value: "oneTime" },
+          { label: "Weekly", value: "weekly" },
+          { label: "BiWeekly", value: "biweekly" },
+          { label: "Monthly", value: "monthly" },
+          { label: "Annual", value: "annual" }
+        ]}
+        placeholder="Billing Cycle"
+        containerStyle={{ height: 40 }}
+        style={{ color: "#68A047" }}
+        dropDownStyle={{ backgroundColor: "#fafafa" }}
+      />
+
+      <Button
+        onPress={async () => {
+          try {
+            let response = await fetch(
+              "https://budgetmanagerpro.herokuapp.com/api/users/" +
+                user.paramKeys._id +
+                "/budgets",
+              {
+                method: "GET",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + user.token
+                }
+              }
+            );
+            res = await response.json();
+          } catch (err) {
+            console.log(err);
+          }
+
+          try {
+            let response = await fetch(
+              "https://budgetmanagerpro.herokuapp.com/api/users/" +
+                user.paramKeys._id +
+                "/budgets/" +
+                //res[0].id
+                res.user_budgets._id,
+              {
+                method: "PUT",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + user.token
+                },
+                body: JSON.stringify({
+                  user_budgets: []
+                })
+              }
+            );
+            res = await response.json();
+          } catch (err) {
+            console.log(err);
+          }
+
+          submitHandler(expenseName);
+        }}
+        title="add to budget"
+        color="#68A047"
+      />
+    </View>
+  );
+}
 function ManageScreen({ navigation }) {
-  const [expenses, setExpenses] = useState([
-    { text: "Cooper", key: "1" },
-    { text: "Rent", key: "2" }
-  ]);
+  const [expenses, setExpenses] = useState([]);
   const pressHandler = key => {
     setExpenses(prevExpenses => {
       Alert.alert("Warning!", "Take this out of the budget?");
@@ -410,8 +451,8 @@ function ManageScreen({ navigation }) {
     });
   };
 
-  const submitHandler = text => {
-    if (text.length > 3) {
+  const submitHandler = (text1, text2) => {
+    if (text1.length > 3) {
       Alert.alert("Yay!", "Added to list!");
       setExpenses(prevExpenses => {
         return [{ text: text, key: Math.random().toString() }, ...prevExpenses];
@@ -437,56 +478,6 @@ function ManageScreen({ navigation }) {
   );
 }
 
-// function SpendingScreen({ navigation }) {
-//   const [expenses, setExpenses] = useState([
-//     { text: "Figure out", key: "1" },
-//     { text: "How to", key: "2" },
-//     { text: "Do this", key: "3" },
-//     { text: "Globally", key: "4" }
-//   ]);
-//   const pressHandler = key => {
-//     setExpenses(prevExpenses => {
-//       Alert.alert("Warning!", "Take this out of the budget?");
-//       return prevExpenses.filter(expense => expense.key != key);
-//     });
-//   };
-//   return (
-//     <View>
-//       <Spending />
-//       <ViewExpenses />
-//       <VictoryPie
-//         height={350}
-//         colorScale={[
-//           "#68A047",
-//           "#FFDD0E",
-//           "#E9AE0B",
-//           "#526c5b",
-//           "#dcdcbb",
-//           "#fa6e06",
-//           "#244c3c",
-//           "#590202",
-//           "#a7bf50"
-//         ]}
-//         // filled in with dummy data
-//         data={[
-//           { x: 1, y: 12, label: "Rent" },
-//           { x: 2, y: 12, label: "Subscriptions" },
-//           { x: 3, y: 25, label: "Only" },
-//           { x: 3, y: 12, label: "Food" },
-//           { x: 3, y: 25, label: "Alcohol" },
-//           { x: 3, y: 25, label: "Electric" }
-//         ]}
-//       />
-//       <FlatList
-//         data={expenses}
-//         renderItem={({ item }) => (
-//           <ExpenseItem item={item} pressHandler={pressHandler} />
-//         )}
-//       />
-//     </View>
-//   );
-// }
-
 function MyTabs({ route, navigation }) {
   const { paramKeys } = route.params;
   const { email } = route.params;
@@ -495,7 +486,7 @@ function MyTabs({ route, navigation }) {
 
   return (
     <Tab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Home"
       tabBarOptions={{
         showIcon: true,
         activeTintColor: "#000",
@@ -544,74 +535,84 @@ function MyTabs({ route, navigation }) {
   );
 }
 
-function homeScreen({ route, navigation }) {
-  state: {
-  }
+function homeScreen({ navigation, route }) {
+  var ctr = 0; // test
+  console.log("Im in here"); // test
   var pieData;
   const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
-  console.log(
-    "homescreen: parent params",
-    parentState.routes[parentState.index].params
-  );
+  const [pie, setPie] = useState([]);
+  const [isSeen, setSeen] = useState(false);
+  const [cost, setCost] = useState();
+  const [weekly, setWeekly] = useState();
+  if (parentState.routes[parentState.index].params == null) {
+    return <View></View>;
+  }
+
   const user = parentState.routes[parentState.index].params;
 
   const string =
     "https://budgetmanagerpro.herokuapp.com/api/users/" +
     user.paramKeys._id +
     "/budgets";
-  console.log("Returned String:::::" + string);
-  pieData = fetch(string, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + user.token
-    }
-  })
-    .then(response => response.json())
-    .then(responseJson => {
-      // console.log(
-      //   "Expense name::: " + responseJson[0].budget_expense[0].expense_name
-      // );
-      // console.log(
-      //   "Expense cost::: " + responseJson[0].budget_expense[0].expense_cost
-      // );
-
-      let data = []; // EMPTY JSON ARRAY
-      let expenseLength = responseJson[0].budget_expense.length; //logging array length to see if it works
-      console.log(responseJson[0].budget_expense[0].expense_name); //logging expense name to see if it is a string
-
-      for (var i = 0; i < expenseLength; i++) {
-        var object = {
-          x: responseJson[0].budget_expense[i].expense_name, //maybe a string maybe not
-          y: responseJson[0].budget_expense[i].expense_cost //already a number
-        };
-        data.push(object);
+  useEffect(() => {
+    pieData = fetch(string, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + user.token
       }
-
-      // this.setState({ pieData });
-      pieData = JSON.stringify(data);
-      console.log(pieData); //ACTUALLY PRINTS
-      return pieData;
     })
-    .catch(error => console.log(error));
-  console.log("Pie Data: " + pieData.x[0]); // UNDEFINED
-  //console.log("Pie Data: " + responseJson);
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(
+          "Expense name::: " + responseJson[0].budget_expense[0].expense_name
+        );
+        console.log(
+          "Expense cost::: " + responseJson[0].budget_expense[0].expense_cost
+        );
+        console.log("ctr is fucking high: " + ctr++); // remove later
+        if (responseJson != null) {
+          let data = []; // EMPTY JSON ARRAY
+          let expenseLength = responseJson[0].budget_expense.length; //logging array length to see if it works
+          //logging expense name to see if it is a string
+
+          var total = 0;
+          for (var i = 0; i < expenseLength; i++) {
+            total +=
+              user.paramKeys.user_budgets[0].budget_expense[i].expense_cost;
+          }
+
+          setCost(total);
+          setWeekly(total / 4);
+
+          for (var i = 0; i < expenseLength; i++) {
+            var object = {
+              name: responseJson[0].budget_expense[i].expense_name, //maybe a string maybe not
+              price: responseJson[0].budget_expense[i].expense_cost //already a number
+            };
+            data.push(object);
+          }
+
+          setPie(data);
+        }
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  //if (run == true)
   return (
     <View>
       <View>
         <Header />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <Text style={styles.Welcome}>
-              {" "}
-              Welcome Back {user.paramKeys.name}!
-            </Text>
+            <Text style={styles.Welcome}> Welcome Back!</Text>
             <Home />
-            <Text style={styles.Current}>Current Monthly Budget: </Text>
-            <Text style={styles.Budget}>[monthly budget]</Text>
-            <Text style={styles.Current}>Current Weekly Budget: </Text>
-            <Text style={styles.daily}>[weekly budget]</Text>
+            <Text style={styles.Current}>Current Monthly Spending: </Text>
+            <Text style={styles.Budget}>${cost}</Text>
+            <Text style={styles.Current}>Weekly Spending Average: </Text>
+            <Text style={styles.daily}>${weekly}</Text>
             <VictoryPie
               height={350}
               colorScale={[
@@ -625,12 +626,21 @@ function homeScreen({ route, navigation }) {
                 "#590202",
                 "#a7bf50"
               ]}
-              data={pieData}
+              data={pie}
+              x="name"
+              y="price"
             />
-            <Text style={styles.Body}>
-              It looks like you are currently [-$difference] according to your
-              current budget. lets fix that
-            </Text>
+            {/* [{ x: pie.x, y: pie.y }] */}
+
+            <View style={styles.rowContainer}>
+              <TouchableOpacity onPress={() => navigation.navigate("Manage")}>
+                <Text style={styles.manage}>Manage Budget </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+                <Text style={styles.manage}> Profile Screen</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -747,7 +757,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#68A047",
     justifyContent: "center"
-    // alignItems: "center"
   },
   container2: {
     flex: 1,
@@ -768,6 +777,26 @@ const styles = StyleSheet.create({
     paddingTop: 160,
     backgroundColor: "#68A047",
     justifyContent: "center"
+  },
+  input: {
+    height: 40,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderBottomColor: 1,
+    color: "#68A047",
+    borderBottomColor: "white"
+  },
+  time: {
+    height: 40,
+    fontSize: 20,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderBottomColor: 1,
+    alignContent: "center",
+    color: "#68A047",
+    borderBottomColor: "white"
   },
   budgetContainer: {
     flex: 1,
@@ -792,7 +821,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   Welcome: {
-    marginTop: 30,
     fontSize: 30,
     alignItems: "center"
   },
@@ -836,10 +864,20 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textDecorationLine: "underline"
   },
+  manage: {
+    color: "black",
+    fontSize: 11,
+    textDecorationLine: "underline"
+  },
   bugdetButton: {
     color: "black",
     fontSize: 11,
     textDecorationLine: "underline"
+  },
+  rowContainer: {
+    flexDirection: "row",
+    padding: 10,
+    justifyContent: "space-evenly"
   },
   navBudget: {
     color: "black",
