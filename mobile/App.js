@@ -319,6 +319,7 @@ function AddExpense({ submitHandler }) {
 
   const showTimepicker = () => {
     showMode("time");
+  };
 
   const changeHandler = val => {
     setExpenseName(val);
