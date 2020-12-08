@@ -51,7 +51,7 @@ router.post('/users', async function(req, res, next) {
     Users.create(req.body).then(async function(user) {
         const msg = {
             to: req.body.email,
-            from: 'budgetmanagerproapp@gmail.com',
+            from: 'bmp.team.verify@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: 
              `
