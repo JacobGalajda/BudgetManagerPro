@@ -13,15 +13,17 @@ function App() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/login" component={Login}>
+          <Route path="/login" exact component={Login}>
           </Route>
-          <Route exact path="/signUp" component={SignUp}>
+          <Route path="/signUp" exact component={SignUp}>
           </Route>
-          <Route exact path="/forgotPassword" component={ForgotPassword}>
+          <Route path="/forgotPassword" exact component={ForgotPassword}>
           </Route>
-          <Route exact path="/landing" component={Landing}>
+          <Route path="/landing" exact component={Landing}>
           </Route>
+          <Route path="/*" component={Login}>
           <Redirect to="/login"></Redirect>
+          </Route>
         </Switch>
       </BrowserRouter>
     );
