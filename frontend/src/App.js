@@ -6,33 +6,28 @@ import Login from './Login.js';
 import bootsrap from 'react-bootstrap';
 import SignUp from './SignUp';
 import ForgotPassword from './ForgotPassword';
-import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Landing from './Landing';
 
-class App extends Component {
-  render() {
+function App() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/login" exact>
-            <Login/>
+          <Route exact path="/login" component={Login}>
           </Route>
-          <Route path="/signUp" exact>
-            <SignUp/>
+          <Route exact path="/signUp" component={SignUp}>
           </Route>
-          <Route path="/forgotPassword" exact>
-            <ForgotPassword/>
+          <Route exact path="/forgotPassword" component={ForgotPassword}>
           </Route>  
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
-          <Route path="/landing" exact>
-            <Landing/>
+          <Route exact path="/landing" component={Landing}>
           </Route>
-      </Switch>
+          <Redirect to="/login"></Redirect>
+        </Switch>
       </BrowserRouter>
     );
-  }
-}
+};
 
 export default App;
