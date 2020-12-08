@@ -41,10 +41,17 @@ router.get('/users', verifyToken, function(req, res) {
 // API endpoint - post new user
 router.post('/users', async function(req, res, next) {  
     req.body.emailToken = crypto.randomBytes(64).toString('hex');
+    const budget = new Budget({
+        budget_category: 'Personal',
+        budget_name: 'Global',
+        budget_expense: [{}]
+    });
+    //req.body.user_budgets = [Budget]; // either this
+    req.body.user_budgets.push(budget); //or this
     Users.create(req.body).then(async function(user) {
         const msg = {
             to: req.body.email,
-            from: 'budgetmanagerproapp@gmail.com',
+            from: 'bmp.team.verify@gmail.com',
             subject: 'Budget Manager Pro - Verify your account',
             text: 
              `
@@ -156,7 +163,7 @@ router.delete('/users/:id', verifyToken, function(req, res) {
 })
 
 // API endpoint - get list of all THIS users budgets
-router.get('/users/:id/budgets', function(req, res) {
+router.get('/users/:id/budgets', verifyToken ,function(req, res) {
     // user_id?
     //user_id = req.session.passport.user;
     //res.send(req.params.id);
@@ -179,7 +186,7 @@ router.get('/users/:id/budgets', function(req, res) {
 });
 
 // API endpoint - post new budget
-router.post('/users/:id/budgets', function(req, res, next) {
+router.post('/users/:id/budgets', verifyToken,function(req, res, next) {
     //
     console.log(req.body)
 
