@@ -20,9 +20,56 @@ body {
   text-align: center;
 }
 
+.left {
+  margin: auto;
+  text-align: center;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+body {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #eee;
+}
+
+.console {
+  font-family: 'Fira Mono';
+  width: 700px;
+  height: 450px;
+  box-sizing: border-box;
+  margin: auto;
+}
+
+.console header {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background-color: #555;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  color: #DDD;
+}
+
+.console .consolebody {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  box-sizing: border-box;
+  padding: 20px;
+  height: calc(100% - 40px);
+  overflow: scroll;
+  background-color: #000;
+  color: #68A047;
+}
+
+.console .consolebody p {
+  line-height: 1.5rem;
 }
 
 .modal {
