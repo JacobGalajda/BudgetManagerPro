@@ -18,9 +18,6 @@ function App() {
           <Route exact path="/signUp" component={SignUp}>
           </Route>
           <Route exact path="/forgotPassword" component={ForgotPassword}>
-          </Route>  
-          <Route exact path="/">
-            <Redirect to="/login" />
           </Route>
           <Route exact path="/landing" component={Landing}>
           </Route>
