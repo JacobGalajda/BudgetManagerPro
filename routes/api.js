@@ -13,11 +13,24 @@ const config = require('../config');
 const verifyToken = require('./verifyToken');
 
 // require sendgrid/mail
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SendGrid);
+//const sgMail = require('@sendgrid/mail');
+//sgMail.setApiKey(process.env.SendGrid);
 //require crypto
 const crypto = require('crypto');
 
+// nodemailer
+const nodemailer = require('nodemailer');
+
+// google apis
+const { google } = require('googleapis');
+
+const CLIENT_ID = '963729588928-9qhcps2dnkr8unndtg4imbgi01b11rds.apps.googleusercontent.com';
+const CLIENT_SECRET = 'ht4D0ATpWUr7DHRlJ9zNPcII';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = '1//048hnQ6NVnH0yCgYIARAAGAQSNwF-L9IrUZCMTPZCeml5BEfsLZfcGoBp5DVvniXzW1OzC_XNBHtHqNG2KJU-h06qpnyoeQZxemE';
+
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
 
 // create instance of express router for interpreting routes
 const router = express.Router();
@@ -48,33 +61,54 @@ router.post('/users', async function(req, res, next) {
     // });
     // req.body.user_budgets = [Budget]; // either this
     Users.create(req.body).then(async function(user) {
-        const msg = {
-            to: req.body.email,
-            from: 'bmp.team.verify@gmail.com',
-            subject: 'Budget Manager Pro - Verify your account',
-            text: 
-             `
-            Hello, thanks for registering on our website.
-            Please copy and paste the address below to verify your account.
-            http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
-            `
-            ,
-            html: 
-            `
-            <h1> Hello,</h1>
-            <p>Thanks for registering on our website,</p>
-            <p>Please click the link below to verify your account.</p>
-            <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
-            `
-        };
         try {
-            await sgMail.send(msg).then((response) => {
-                console.log(response);
-                res.send({
-                    success: true,
-                    message: 'Thank you for registering. Please check your email to verify your account.'             
-                });
-            });           
+            // await sgMail.send(msg).then((response) => {
+            //     console.log(response);
+            //     res.send({
+            //         success: true,
+            //         message: 'Thank you for registering. Please check your email to verify your account.'             
+            //     });
+            // });        
+            const accessToken = await oAuth2Client.getAccessToken();
+            
+            const transport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    type: 'OAuth2',
+                    user: 'budgetapppro@gmail.com',
+                    clientId: CLIENT_ID,
+                    clientSecret: CLIENT_SECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    accessToken: accessToken
+                }
+            })
+
+            const mailOptions = {
+                to: req.body.email,
+                from: 'Budget Manager Pro <budgetapppro@gmail.com>',
+                subject: 'Budget Manager Pro - Verify your account',
+                text: 
+                `
+                Hello, thanks for registering on our website.
+                Please copy and paste the address below to verify your account.
+                http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}
+                `
+                ,
+                html: 
+                `
+                <h1> Hello,</h1>
+                <p>Thanks for registering on our website,</p>
+                <p>Please click the link below to verify your account.</p>
+                <a href="http://${req.headers.host}/api/verify-email?token=${req.body.emailToken}"> Verify your account</a>
+                `
+            }
+
+            const result = await transport.sendMail(mailOptions);
+            console.log(result);
+            res.send({
+                success: true,
+                message: 'Thank you for registering. Please check your email to verify your account.'             
+            });
         } catch(error) {
             console.log(error);
             res.status(401).send({

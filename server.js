@@ -15,19 +15,19 @@ const app = express();
 const dev = app.get('env') !== 'production';
 
 
-if (!dev) {
-    app.use(compression());
-    app.use(morgan('common'));
-    app.use(express.static('frontend/build'));
+// if (!dev) {
+//     app.use(compression());
+//     app.use(morgan('common'));
+//     app.use(express.static('frontend/build'));
 
-    app.get('*', function(req, res) {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-    });
-}
+//     app.get('*', function(req, res) {
+//         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+//     });
+// }
 
-if (dev) {
-    app.use(morgan('dev'));
-}
+// if (dev) {
+//     app.use(morgan('dev'));
+// }
 
 const normalizePort = port => parseInt(port, 10);
 const PORT = normalizePort(process.env.PORT || 3001);
@@ -50,6 +50,14 @@ app.use(bodyParser.json());
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 
+// Check production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/build'))
+
+    app.get('*', function (req, res) {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 app.listen(PORT, function() {
     console.log(`Server listening on port ${PORT}.`);
