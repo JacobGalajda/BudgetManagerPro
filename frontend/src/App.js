@@ -8,7 +8,6 @@ import SignUp from './SignUp';
 import ForgotPassword from './ForgotPassword';
 import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Landing from './Landing';
-import PopUp from './PopUp';
 
 class App extends Component {
   render() {
