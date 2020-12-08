@@ -14,7 +14,7 @@ const verifyToken = require('./verifyToken');
 
 // require sendgrid/mail
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('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');
+sgMail.setApiKey(process.env.SendGrid);
 //require crypto
 const crypto = require('crypto');
 
