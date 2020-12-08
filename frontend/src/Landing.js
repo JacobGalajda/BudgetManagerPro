@@ -16,8 +16,8 @@ const commands = {
         fn: args => {
             return `
             clear                                                                  # Refresh the terminal screen
-            add <ITEM_NAME> <PRICE>                                                # Adds a new Item to your budget
-            edit <ITEM_NAME> <PRICE>                                               # Edit an existing Item in your budget
+            add <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                              # Adds a new Item to your budget
+            edit <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                             # Edit an existing Item in your budget
             delete <ITEM_NAME>                                                     # Delete an Item from your budget
             update_profile <username OR password> <new value> <repeat new value>   # Update your profile name or password
             burn_account                                                           # PERMANATELY delete your account
