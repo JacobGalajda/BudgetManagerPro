@@ -16,7 +16,14 @@ class ForgotPassword extends Component {
     handleClick(e) {
         var email = document.getElementById("Email").value;
         var username = document.getElementById("UserName").value;
-        
+        var password1 = document.getElementById("Password1").value;
+        var password2 = document.getElementById("Password2").value;
+
+        if (password1 === password2) {
+            alert("Passwords must match.");
+            return;
+        }
+
         fetch('https://budgetmanagerpro.herokuapp.com/api/password-reset', 
         {
             method: "POST",
@@ -52,6 +59,9 @@ class ForgotPassword extends Component {
                     
                     <input type="text" id="Email" placeholder="Email"></input>
                     <input type="text" id="UserName" placeholder="UserName"></input>
+                    <br></br>
+                    <input type="password" id="Passowrd1" placeholder="New Password"></input>
+                    <input type="password" id="Password2" placeholder="Confirm New Password"></input>
                     <Button id="ForgotPasswordButton" onclick={(e => this.handleClick(e))}>Submit</Button>
                     </form>
                     <Nav className="flex-column">
