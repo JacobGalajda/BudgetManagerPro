@@ -1,26 +1,29 @@
 import './App.css';
-import './index.css'
-import './budgetFormatting.css'
+import './index.css';
+import './budgetFormatting.css';
+import Login from './Login.js';
 import React, {Component, useState} from 'react';
-import bootstrap, { Button, Badge, Container, Col, Row, Navbar, Form, FormControl } from 'react-bootstrap';
+import bootstrap, { Alert, Button, Badge, Container, Col, Row, Navbar, Form, FormControl } from 'react-bootstrap';
 import victory, { VictoryPie } from 'victory';
-import CommandLine from 'react-command-line'
+import CommandLine from 'react-command-line';
+
+/**
+ * expense_cost, expense_name, expense_category
+ *  ^^ Features shown on mobile
+ */
+
+// TODO() Tags have been placed where the API needs to be hooked up. The alert() tells what API call is needed
 
 const commands = {
-    hello: {
-      fn: args => {
-        return `The arguments are ${args}`
-      }
-    },
     help: {
         fn: args => {
             return `
-            clear                                                                  # Refresh the terminal screen
-            add <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                              # Adds a new Item to your budget
-            edit <ITEM_NAME> <PRICE> [BUDGET_CATEGORY]                             # Edit an existing Item in your budget
-            delete <ITEM_NAME>                                                     # Delete an Item from your budget
-            update_profile <username OR password> <new value> <repeat new value>   # Update your profile name or password
-            burn_account                                                           # PERMANATELY delete your account
+            clear
+            add <ITEM_NAME> <PRICE> <BUDGET_CATEGORY>
+            edit <name |OR| price |OR| category> <new value>
+            delete <ITEM_NAME> <repeat ITEM_NAME>
+            update_profile <USERNAME |OR| PASSWORD> <new value> <repeat new value>
+            burn_account
             `
         }
     },
@@ -31,36 +34,122 @@ const commands = {
     },
     update_profile: {
         fn: args => {
-            return `Route in progress`
+            if (Object.keys(args).length < 3) {
+                return `SYNTAX: update_profile <USERNAME | PASSWORD> <NEW VALUE> <REPEAT NEW VALUE>
+                        Select either username or password and the new value twice to confirm.`
+            }
+
+            const option = args[0];
+
+            if (option !== 'username' && option !== 'password') {
+                return `ERROR: Invalid parameter detected. Try "username" or "password"`
+            }
+
+            if (args[1] !== args[2]) {
+                return `ERROR: New values must match each other`
+            }
+
+            // TODO() Update username in API call
+            if (option === 'username') {
+                alert("Updating Username");
+            }
+
+            // TODO() Hash password and send in updateUser API
+            if (option === 'password') {
+                alert("Updating Password");
+            }
         }
     },
     add: {
         fn: args => {
-            return `Route in progress`
+            if (Object.keys(args).length < 2) {
+                return `SYNTAX: add <ITEM_NAME> <PRICE> <BUDGET_CATEGORY>
+                        Item name, price and budget category are required.`
+            }
+
+            const item_name = args[0];
+            const item_price = args[1];
+            const item_category = args[2];
+
+            // TODO() Add Item API
+            alert("Adding Item");
         }
     },
     edit: {
         fn: args => {
-            return `Route in progress`
+            if (Object.keys(args).length < 3) {
+                return `SYNTAX: edit <ITEM_NAME> <name |OR| price |OR| category> <NEW_VALUE>
+                        Select either the name, price or category to modify the item along with the new value.`
+            }
+
+            const iten_name = args[0];
+            const option = args[1];
+            const value = args[2];
+
+            // TODO() Update Name, Price, Category API
+            if (option === 'name') {
+                alert('Editing Item Name');
+            }
+            else if (option === 'price') {
+                alert('Editing Item Price');
+            }
+            else if (option === 'category') {
+                alert('Editing Item Category');
+            }
+
+            return `ERROR: Select name, price or category to edit`
         }
     },
     delete: {
         fn: args => {
-            return `Route in progress`
+            if (Object.keys(args).length < 1) {
+                return `SYNTAX: delete <ITEM_NAME>
+                        Enter an item to delete from the budget`
+            }
+
+            const item_name = args[0];
+            alert("Deleting Item");
         }
     },
     burn_account: {
         fn: args=> {
-            return `Route in progress`
+            alert(
+                "Log Out?",
+                "Are you sure you want to log out?",
+                [
+                  {
+                    text: "No"
+                    // onPress: () => console.log("No Pressed!")
+                  },
+                  {
+                    text: "Yes",
+                    onClick: () => alert("Deleting account")
+                  }
+                ],
+                { cancelable: false }
+              );
         }
     }
   }
 
 export default class Landing extends Component {
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: []
+        }
+    }
+
+    handleClick(e) {
+        alert("Imagine me loggin out....");
+    }
+
     render() {
         return (
-            <div>
+            <Container>
+                <br></br>
+                <br></br>
+                <br></br>
                 <Navbar bg="dark" variant="dark" className="align-me">
                     <Navbar.Brand href="/login">
                         Budget Manager Pro
@@ -69,20 +158,19 @@ export default class Landing extends Component {
                         <p className="center">A place to organize finances to ensure that they are within their financial scopes.</p>
                     </div>
                     <div>
-                        <Button variant="outline-danger">Log Out</Button>
+                        <Button variant="outline-danger" onClick={(e => this.handleClick(e))}>Log Out</Button>
                     </div>
                 </Navbar>
 
                 <Container>
-                    <br></br>
-                    <br></br>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
-
-                    <VictoryPie height={200} padding={35}
+                    <br></br>
+                    <VictoryPie height={100} padding={25}
                         data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 55 }
+                            { x: "Beer", y: 35 },
+                            { x: "Drugz", y: 40 },
+                            { x: "Speeding Tickets", y: 55 },
+                            { x: "Gambling Debt", y: 100}
                           ]}
                           colorScale={[
                             "#FFDD0E",
@@ -94,7 +182,7 @@ export default class Landing extends Component {
                             "#590202",
                             "#a7bf50"
                           ]}
-                          style={{ labels: { fill: "white", fontSize: 8, fontWeight: "bold" } }}
+                          style={{ labels: { fill: "white", fontSize: 6 } }}
                     >
                     </VictoryPie>
 
@@ -103,19 +191,18 @@ export default class Landing extends Component {
 
 
                         <div class="console">
-                        <header>
-                            <p></p>
-                        </header>
-                        <div class="consolebody left">
-                            <p> Type help to see a list of commands. Refresh page to clear terminal.</p>
-                            <CommandLine commands={commands}></CommandLine>
-                        </div>
+                            <header>
+                                <p></p>
+                            </header>
+                            <div class="consolebody left">
+                                <p> Type help to see a list of commands. Refresh page to clear terminal.</p>
+                                <CommandLine commands={commands}></CommandLine>
+                            </div>
                         </div>
                     </div>
                 
-
                 </Container>
-            </div>
+            </Container>
         );
     }
 };

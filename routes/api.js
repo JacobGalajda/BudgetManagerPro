@@ -247,6 +247,7 @@ router.get('/password-recover', async (req, res) => {
         if (!user) {
             const html = 
             `
+<<<<<<< HEAD
             <!DOCTYPE html>
             <html lang="en">
             
@@ -286,6 +287,11 @@ router.get('/password-recover', async (req, res) => {
                 <div>
             </body>
             </html>
+=======
+            Hello, 
+            Please copy and paste the link below to reset your password.
+            http://budgetmanagerpro.herokuapp.com/forgotPassword
+>>>>>>> a17d26d18edea01302b8e9518671c64707d9377a
             `
 
             res.send(html);
