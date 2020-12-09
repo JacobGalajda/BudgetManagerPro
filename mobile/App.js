@@ -14,38 +14,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Ionicons";
-// import Login from "./screens/login";
 import Home from "./bottomTab/home";
-import Account from "./bottomTab/accountScreen";
-import Budget from "./bottomTab/budget";
-import BudgetHistory from "./bottomTab/budgetHistory";
 import Manage from "./bottomTab/manage";
-import Spending from "./bottomTab/spending";
 import Forgot from "./screens/forgot";
-import ExpenseItem from "./bottomTab/expenseItem";
-// import AddExpense from "./bottomTab/addExpense";
-import ViewExpenses from "./bottomTab/viewExpenses";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
-import viewExpenses from "./bottomTab/viewExpenses";
 import Header from "./components/header";
-import { Checkbox } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-import {
-  VictoryPie,
-  VictoryBar,
-  VictoryChart,
-  VictoryTheme,
-  VictoryLine
-} from "victory-native";
+import { VictoryPie } from "victory-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const Tab = createBottomTabNavigator();
-const chart_wh = 250;
-const series = [123, 321, 123, 789, 537];
-const sliceColor = ["#F44336", "#2196F3", "#FFEB3B", "#4CAF50", "#FF9800"];
-var total = 0;
-var name;
 
 class Sign extends React.Component {
   state = {
@@ -243,7 +221,7 @@ class Login extends React.Component {
 
 function ProfileScreen({ route, navigation }) {
   const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
-  console.log("parent params", parentState.routes[parentState.index].params);
+  // console.log("parent params", parentState.routes[parentState.index].params);
   const user = parentState.routes[parentState.index].params;
   // console.log("\n\n\n:::::Testing: " + user.email);
 
@@ -294,13 +272,207 @@ function ProfileScreen({ route, navigation }) {
     </ScrollView>
   );
 }
-function AddExpense({ submitHandler }) {
+// function AddExpense({ submitHandler }) {
+//   // const [expenseCategory, setExpenseCategory] = useState("");
+//   // const [expenseName, setExpenseName] = useState("");
+//   // const [price, setPrice] = useState("");
+//   const [checked, setChecked] = useState(false);
+//   const [date, setDate] = useState(new Date(1598051730000));
+//   const [mode, setMode] = useState("date");
+//   const [show, setShow] = useState(false);
+//   const [state, setState] = React.useState({
+//     firstName: "",
+//     lastName: ""
+//   });
+
+//   const onChange = (event, selectedDate) => {
+//     const currentDate = selectedDate || date;
+//     setShow(Platform.OS === "ios");
+//     setDate(currentDate);
+//   };
+
+//   const showMode = currentMode => {
+//     setShow(true);
+//     setMode(currentMode);
+//   };
+
+//   const showDatepicker = () => {
+//     showMode("date");
+//   };
+
+//   const showTimepicker = () => {
+//     showMode("time");
+//   };
+
+//   const changeHandler = val => {
+//     setExpenseName(val);
+//   };
+
+//   return (
+//     <View>
+//       <DropDownPicker
+//         items={[
+//           { label: "Rent", value: "rent" },
+//           { label: "Utilites", value: "utilites" },
+//           { label: "Subscriptions", value: "subscriptions" },
+//           { label: "Gas", value: "gas" },
+//           { label: "Groceries", value: "groceries" },
+//           { label: "Student Loans", value: "groceries" },
+//           { label: "Insurance", value: "insurance" },
+//           { label: "Car", value: "car" }
+//         ]}
+//         placeholder="Expense Category"
+//         containerStyle={{ height: 40 }}
+//         style={{ color: "#68A047" }}
+//         dropDownStyle={{ backgroundColor: "#fafafa" }}
+//         onChangeItem={item =>
+//           this.setState({
+//             category: item.value
+//           })
+//         }
+//       />
+//       <TextInput
+//         style={styles.input}
+//         placeholder="New Expense.."
+//         onChangeText={name => changeHandler(name)}
+//         // value={this.state.name}
+//       />
+//       <TextInput
+//         keyboardType="numeric"
+//         style={styles.input}
+//         placeholder="Price"
+//         // onChangeText={price => this.setState({ price })}
+//         // value={this.state.price}
+//       />
+
+//       {/* <Checkbox.Item
+//         label="Has this Been Paid Already?"
+//         labelStyle="#68A047"
+//         status={checked ? "checked" : "unchecked"}
+//         color="#68A047"
+//         onPress={() => {
+//           setChecked(!checked);
+//         }}
+//       /> */}
+//       <View style={styles.container}>
+//         <Text style={styles.time}>Select the Date The Expense is Due</Text>
+//       </View>
+//       <DateTimePicker
+//         testID="dateTimePicker"
+//         value={date}
+//         mode={mode}
+//         is24Hour={true}
+//         display="default"
+//         onChange={onChange}
+//       />
+//       {/* <DropDownPicker
+//         items={[
+//           { label: "One Time Expense", value: "oneTime" },
+//           { label: "Weekly", value: "weekly" },
+//           { label: "BiWeekly", value: "biweekly" },
+//           { label: "Monthly", value: "monthly" },
+//           { label: "Annual", value: "annual" }
+//         ]}
+//         placeholder="Billing Cycle"
+//         containerStyle={{ height: 40 }}
+//         style={{ color: "#68A047" }}
+//         dropDownStyle={{ backgroundColor: "#fafafa" }}
+//       /> */}
+
+//       <Button
+//         onPress={async () => {
+//           try {
+//             let response = await fetch(
+//               "https://budgetmanagerpro.herokuapp.com/api/users/" +
+//                 user.paramKeys._id +
+//                 "/budgets",
+//               {
+//                 method: "GET",
+//                 headers: {
+//                   Accept: "application/json",
+//                   "Content-Type": "application/json",
+//                   Authorization: "Bearer " + user.token
+//                 }
+//               }
+//             );
+//             res = await response.json();
+//           } catch (err) {
+//             console.log(err);
+//           }
+
+//           try {
+//             let response = await fetch(
+//               "https://budgetmanagerpro.herokuapp.com/api/users/" +
+//                 user.paramKeys._id +
+//                 "/budgets/" +
+//                 //res[0].id
+//                 res.user_budgets._id,
+//               {
+//                 method: "PUT",
+//                 headers: {
+//                   Accept: "application/json",
+//                   "Content-Type": "application/json",
+//                   Authorization: "Bearer " + user.token
+//                 },
+//                 body: JSON.stringify({
+//                   user_budgets: []
+//                 })
+//               }
+//             );
+//             res = await response.json();
+//           } catch (err) {
+//             console.log(err);
+//           }
+
+//           submitHandler(expenseName);
+//         }}
+//         title="add to budget"
+//         color="#68A047"
+//       />
+//     </View>
+//   );
+// }
+
+function ManageScreen({ navigation }) {
+  const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
+  // console.log("parent params", parentState.routes[parentState.index].params);
+  const user = parentState.routes[parentState.index].params;
+  const [flag, setFlag] = useState(false);
+  const [expenses, setExpenses] = useState([
+    { name: "Example Name", price: 0, category: "Select a Category", key: "1" }
+  ]);
   const [expenseName, setExpenseName] = useState("");
-  const [price, setPrice] = useState("");
+  const [expenseCategory, setExpenseCategory] = useState("");
+  const [price, setPrice] = useState(0);
   const [checked, setChecked] = useState(false);
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  var res;
+  const pressHandler = key => {
+    setExpenses(prevExpenses => {
+      return prevExpenses.filter(expense => expense.key != key);
+    });
+  };
+
+  const submitHandler = (text1, text2, text3) => {
+    Alert.alert("Yay!", "Added to list!");
+    setExpenses(prevExpenses => {
+      return [
+        {
+          name: text1,
+          price: text2,
+          category: text3,
+          key: Math.random().toString()
+        },
+        ...prevExpenses
+      ];
+    });
+  };
+
+  const forceUpdateHandler = () => {
+    this.forceUpdate();
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -321,13 +493,22 @@ function AddExpense({ submitHandler }) {
     showMode("time");
   };
 
-  const changeHandler = val => {
+  const changeHandler1 = val => {
     setExpenseName(val);
+  };
+  const changeHandler2 = val => {
     setPrice(val);
   };
+  const changeHandler3 = val => {
+    // console.log("Entered with value " + JSON.stringify(val));
+    setExpenseCategory(val.label);
+  };
+
+  const reRender = () => setRandom(Math.random());
 
   return (
     <View>
+      <Manage />
       <DropDownPicker
         items={[
           { label: "Rent", value: "rent" },
@@ -341,30 +522,23 @@ function AddExpense({ submitHandler }) {
         ]}
         placeholder="Expense Category"
         containerStyle={{ height: 40 }}
+        activeLabelStyle={{ color: "#68A047" }}
         style={{ color: "#68A047" }}
         dropDownStyle={{ backgroundColor: "#fafafa" }}
+        onChangeItem={changeHandler3}
       />
       <TextInput
         style={styles.input}
-        placeholder="New Expense.."
-        onChangeText={changeHandler}
+        placeholder="Expense Name"
+        onChangeText={changeHandler1}
       />
       <TextInput
         keyboardType="numeric"
         style={styles.input}
-        placeholder="Price"
-        onChangeText={changeHandler}
+        placeholder="Expense Price (in USD)"
+        onChangeText={changeHandler2}
       />
 
-      {/* <Checkbox.Item
-        label="Has this Been Paid Already?"
-        labelStyle="#68A047"
-        status={checked ? "checked" : "unchecked"}
-        color="#68A047"
-        onPress={() => {
-          setChecked(!checked);
-        }}
-      /> */}
       <View style={styles.container}>
         <Text style={styles.time}>Select the Date The Expense is Due</Text>
       </View>
@@ -376,19 +550,10 @@ function AddExpense({ submitHandler }) {
         display="default"
         onChange={onChange}
       />
-      <DropDownPicker
-        items={[
-          { label: "One Time Expense", value: "oneTime" },
-          { label: "Weekly", value: "weekly" },
-          { label: "BiWeekly", value: "biweekly" },
-          { label: "Monthly", value: "monthly" },
-          { label: "Annual", value: "annual" }
-        ]}
-        placeholder="Billing Cycle"
-        containerStyle={{ height: 40 }}
-        style={{ color: "#68A047" }}
-        dropDownStyle={{ backgroundColor: "#fafafa" }}
-      />
+
+      {/* Name of Expense: expenseName */}
+      {/* Price Of Expense: price */}
+      {/* Category of Expense: expoenseCategry */}
 
       <Button
         onPress={async () => {
@@ -411,13 +576,19 @@ function AddExpense({ submitHandler }) {
             console.log(err);
           }
 
+          res[0].budget_expense.push({
+            expense_category: expenseCategory,
+            expense_name: expenseName,
+            expense_cost: parseInt(price, 10)
+          });
+          console.log("RES[0] : " + JSON.stringify(res[0].budget_expense)); //TESTING REMOVE LATER
+
           try {
             let response = await fetch(
               "https://budgetmanagerpro.herokuapp.com/api/users/" +
                 user.paramKeys._id +
                 "/budgets/" +
-                //res[0].id
-                res.user_budgets._id,
+                res[0].id,
               {
                 method: "PUT",
                 headers: {
@@ -425,60 +596,50 @@ function AddExpense({ submitHandler }) {
                   "Content-Type": "application/json",
                   Authorization: "Bearer " + user.token
                 },
-                body: JSON.stringify({
-                  user_budgets: []
-                })
+                body: JSON.stringify(res[0])
               }
             );
             res = await response.json();
           } catch (err) {
             console.log(err);
           }
-
-          submitHandler(expenseName);
+          console.log(res); //TESTING REMOVE LATER
+          submitHandler(expenseName, price, expenseCategory);
+          // forceUpdateHandler();
+          // reRender();
         }}
         title="add to budget"
         color="#68A047"
       />
-    </View>
-  );
-}
-function ManageScreen({ navigation }) {
-  const [expenses, setExpenses] = useState([]);
-  const pressHandler = key => {
-    setExpenses(prevExpenses => {
-      Alert.alert("Warning!", "Take this out of the budget?");
-      return prevExpenses.filter(expense => expense.key != key);
-    });
-  };
 
-  const submitHandler = (text1, text2) => {
-    if (text1.length > 3) {
-      Alert.alert("Yay!", "Added to list!");
-      setExpenses(prevExpenses => {
-        return [{ text: text, key: Math.random().toString() }, ...prevExpenses];
-      });
-    } else {
-      Alert.alert("Oops!", "expense must be at least 4 characters long!");
-    }
-  };
-
-  return (
-    <View>
-      <Manage />
-      <AddExpense submitHandler={submitHandler} />
       <View>
         <FlatList
           data={expenses}
           renderItem={({ item }) => (
-            <ExpenseItem item={item} pressHandler={pressHandler} />
+            <TouchableOpacity onPress={() => pressHandler(item.key)}>
+              <Text style={styles.item}>
+                <Text style={styles.item1}>
+                  {"\t\t"}Press Me To Remove From Budget{"\n"}
+                </Text>
+                <Text style={styles.item}>
+                  Category: {item.category}
+                  {"\n"}
+                </Text>
+                <Text style={styles.item}>
+                  Name: {item.name} {"\n"}
+                  <Text style={styles.item}>
+                    Price: ${item.price}
+                    {"\n"}
+                  </Text>
+                </Text>
+              </Text>
+            </TouchableOpacity>
           )}
         />
       </View>
     </View>
   );
 }
-
 function MyTabs({ route, navigation }) {
   const { paramKeys } = route.params;
   const { email } = route.params;
@@ -536,13 +697,76 @@ function MyTabs({ route, navigation }) {
   );
 }
 
+// DOING NEW STUFF BETWEEN THIS
+function useForceUpdate() {
+  var pieData;
+  const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
+  const [pie, setPie] = useState([]);
+  const [cost, setCost] = useState();
+  const [weekly, setWeekly] = useState();
+
+  const user = parentState.routes[parentState.index].params;
+
+  const string =
+    "https://budgetmanagerpro.herokuapp.com/api/users/" +
+    user.paramKeys._id +
+    "/budgets";
+  useEffect(() => {
+    pieData = fetch(string, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + user.token
+      }
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(
+          "Expense name::: " + responseJson[0].budget_expense[0].expense_name
+        );
+        console.log(
+          "Expense cost::: " + responseJson[0].budget_expense[0].expense_cost
+        );
+        console.log("ctr is fucking high: " + ctr++); // remove later
+        if (responseJson != null) {
+          let data = []; // EMPTY JSON ARRAY
+          let expenseLength = responseJson[0].budget_expense.length; //logging array length to see if it works
+          //logging expense name to see if it is a string
+
+          var total = 0;
+          for (var i = 0; i < expenseLength; i++) {
+            total +=
+              user.paramKeys.user_budgets[0].budget_expense[i].expense_cost;
+          }
+
+          setCost(total);
+          setWeekly(total / 4);
+
+          for (var i = 0; i < expenseLength; i++) {
+            var object = {
+              name: responseJson[0].budget_expense[i].expense_name, //maybe a string maybe not
+              price: responseJson[0].budget_expense[i].expense_cost //already a number
+            };
+            data.push(object);
+          }
+
+          setPie(data);
+        }
+      })
+      .catch(err => console.log(err));
+  }, [1]);
+}
+
+// END THIS
+
 function homeScreen({ navigation, route }) {
+  //const forceUpdate = useForceUpdate();
   var ctr = 0; // test
   console.log("Im in here"); // test
   var pieData;
   const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
   const [pie, setPie] = useState([]);
-  const [isSeen, setSeen] = useState(false);
   const [cost, setCost] = useState();
   const [weekly, setWeekly] = useState();
   if (parentState.routes[parentState.index].params == null) {
@@ -599,7 +823,7 @@ function homeScreen({ navigation, route }) {
         }
       })
       .catch(err => console.log(err));
-  }, []);
+  }, [1]);
 
   //if (run == true)
   return (
@@ -764,7 +988,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 1000,
+    paddingBottom: 300,
     paddingTop: 100
   },
   container3: {
@@ -876,9 +1100,9 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline"
   },
   rowContainer: {
+    flex: 4,
     flexDirection: "row",
-    padding: 10,
-    justifyContent: "space-evenly"
+    justifyContent: "space-around"
   },
   navBudget: {
     color: "black",
@@ -893,8 +1117,8 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 80
+    marginTop: 40
+    // marginBottom: 80
   },
   loginBtn1: {
     width: "80%",
@@ -916,6 +1140,24 @@ const styles = StyleSheet.create({
     color: "white",
     textDecorationLine: "underline"
     // marginBottom: 300
+  },
+  item: {
+    padding: 16,
+    marginTop: 16,
+    borderColor: "#bbb",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderRadius: 10
+  },
+  item1: {
+    fontWeight: "bold",
+    fontSize: 16,
+    padding: 16,
+    marginTop: 16,
+    borderColor: "#bbb",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderRadius: 10
   },
   SignUp2: {
     color: "white"
@@ -944,7 +1186,6 @@ const styles = StyleSheet.create({
     fontSize: 45,
     color: "#fff",
     marginTop: 100,
-
     textAlign: "center",
     fontStyle: "italic"
   },
@@ -952,7 +1193,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 50,
     color: "#000",
-    // marginTop: 180,
+
     marginBottom: 70,
     textAlign: "center",
     fontStyle: "italic"
