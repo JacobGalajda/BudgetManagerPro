@@ -28,8 +28,8 @@ class Login extends Component {
                     password: password
                   })
         })
-        .then(res => res.json())
-        .then(data => this.setState({ data: json }));
+        .then((res) => res.json())
+        .then((data) => this.setState({ data: data }));
         console.log(this.state.data);
     }
 
