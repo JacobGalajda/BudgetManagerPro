@@ -14,6 +14,7 @@ import CommandLine from 'react-command-line';
 
 // TODO() Tags have been placed where the API needs to be hooked up. The alert() tells what API call is needed
 var userdata = [];
+var graphdata = [];
 
 const commands = {
     help: {
@@ -51,12 +52,15 @@ const commands = {
             }
 
             if (option === 'username') {
-                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${localStorage.getItem('data').user.id}`, 
+                // var data = JSON.parse(localStorage.getItem('data'));
+                // console.log(data);
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}`, 
                 {
                     method: "PUT",
                         headers: {
                             Accept: "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + `${userdata.token}`
                         },
                         body: JSON.stringify({
                             username: args[1],
@@ -65,25 +69,22 @@ const commands = {
                 .then((res) => res.json())
                 .then((d) => {
                     localStorage.setItem('data', d);
-                    var temp = JSON.parse(localStorage.getItem(d));
+                    //var temp = JSON.parse(localStorage.getItem(d));
+                    //console.log(temp);
+                    //window.location.reload(false);
+                }).catch(err => console.log(err)).finally(() => {return `User updated.`} );
 
-                    if (this.state.data.success === false) {
-                        return `Call failed`;
-                    }
-
-                    else if (this.state.data.success) {
-                        window.location.reload(false);
-                    }
-                });
+                return `Username updated.`
             }
 
             if (option === 'password') {
-                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${this.state.data.user.id}`, 
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}`, 
                 {
                     method: "PUT",
                         headers: {
                             Accept: "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + `${userdata.token}`
                         },
                         body: JSON.stringify({
                             password: args[1],
@@ -91,19 +92,15 @@ const commands = {
                 })
                 .then((res) => res.json())
                 .then((d) => {
-                    this.setState({ data: d });
-                    console.log(this.state.data);
+                    localStorage.setItem('data', d);
+                    //var temp = JSON.parse(localStorage.getItem(d));
+                    //console.log(temp);
+                    //window.location.reload(false);
+                }).catch(err => console.log(err)).finally(() => {return `Password updated.`} );
 
-                    if (this.state.data.success === false) {
-                        return `Call failed`;
-                    }
-
-                    else if (this.state.data.success) {
-                        window.location.reload(false);
-                    }
-                });
-                }
+                return `Password updated.`
             }
+        }
     },
     add: {
         fn: args => {
@@ -116,8 +113,31 @@ const commands = {
             const item_price = args[1];
             const item_category = args[2];
 
-            // TODO() Add Item API
-            alert("Adding Item");
+            userdata.user.user_budgets[0].budget_expense.push({
+                expense_category: item_category,
+                expense_name: item_name,
+                expense_cost: parseInt(item_price, 10)
+            })
+
+            fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}` + "/budgets/" + `${userdata.user.user_budgets[0]._id}`, 
+                {
+                    method: "PUT",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + `${userdata.token}`
+                        },
+                        body: JSON.stringify(userdata.user.user_budgets[0])
+                })
+                .then((res) => res.json())
+                .then((d) => {
+                    localStorage.setItem('data', d);
+                    //var temp = JSON.parse(localStorage.getItem(d));
+                    //console.log(temp);
+                    //window.location.reload(false);
+                }).catch(err => console.log(err)).finally(() => {return `Expense added.`} );
+
+                return `Expense added.`
         }
     },
     edit: {
@@ -133,7 +153,38 @@ const commands = {
 
             // TODO() Update Name, Price, Category API
             if (option === 'name') {
-                alert('Editing Item Name');
+                var i = 0;
+                var temp;
+                for(i = 0; i < userdata.user.user_budgets[0].budget_expense.length; i++) {
+                    if(userdata.user.user_budgets[0].budget_expense[i].expense_name === iten_name) {
+                        break;
+                    }
+                }
+                if(i >= userdata.user.user_budgets[0].budget_expense.length) {
+                    return `Could not find expense.` //POSSIBLY CHANGE
+                }
+                
+                userdata.user.user_budgets[0].budget_expense[i].expense_name = value;
+
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}` + "/budgets/" + `${userdata.user.user_budgets[0]._id}`, 
+                {
+                    method: "PUT",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + `${userdata.token}`
+                        },
+                        body: JSON.stringify(userdata.user.user_budgets[0])
+                })
+                .then((res) => res.json())
+                .then((d) => {
+                    localStorage.setItem('data', d);
+                    //var temp = JSON.parse(localStorage.getItem(d));
+                    //console.log(temp);
+                    //window.location.reload(false);
+                }).catch(err => console.log(err)).finally(() => {return `Expense updated successfully.`} );
+
+                return `Expense updated successfully.`
             }
             else if (option === 'price') {
                 alert('Editing Item Price');
@@ -175,8 +226,12 @@ export default class Landing extends Login {
         this.state = {
             data: props.data
         }
-        userdata = localStorage.getItem('data');
-        console.log(userdata);
+        var userData = localStorage.getItem('data'); // String userdata
+        userdata = JSON.parse(userData); // Javascript userdata
+        graphdata = localStorage.getItem('graph');
+        
+        console.log(userdata); // TEST
+
     }
 
     render() {
@@ -185,13 +240,12 @@ export default class Landing extends Login {
                 <Container>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
                     <br></br>
-                    <VictoryPie height={100} padding={25}
-                        data={[
-                            { x: "Beer", y: 35 },
-                            { x: "Drugz", y: 40 },
-                            { x: "Speeding Tickets", y: 55 },
-                            { x: "Gambling Debt", y: 100}
-                          ]}
+                    <VictoryPie 
+                        height={200} 
+                        padding={25}
+                        x='name'
+                        y='price'
+                        data={JSON.parse(localStorage.getItem('graph'))}
                           colorScale={[
                             "#FFDD0E",
                             "#E9AE0B",
@@ -203,6 +257,7 @@ export default class Landing extends Login {
                             "#a7bf50"
                           ]}
                           style={{ labels: { fill: "white", fontSize: 6 } }}
+                          
                     >
                     </VictoryPie>
 

@@ -32,16 +32,29 @@ class Login extends Component {
         .then((res) => res.json())
         .then((d) => {
             this.setState({ data: d });
-            console.log(this.state.data);
+            //console.log(this.state.data); //TEST 
 
             if (this.state.data.verified === false) {
                 alert("Please verify your account first.");
             }
-
             else if (this.state.data.success) {
                 window.history.pushState(this.state, null, '/Landing');
                 localStorage.setItem('data', JSON.stringify(this.state.data));
+                console.log("AM I PRINTING?"); // Testing
+
+                // Populate graph with expenses
+                var graph = [];
+                var length = this.state.data.user.user_budgets[0].budget_expense.length;
+                for(var i = 0; i < length; i++) {
+                    var object = {
+                        name: this.state.data.user.user_budgets[0].budget_expense[i].expense_name,
+                        price: this.state.data.user.user_budgets[0].budget_expense[i].expense_cost
+                    }
+                    graph.push(object);
+                }
+                localStorage.setItem('graph', JSON.stringify(graph));
                 window.location.reload(false);
+                console.log("Testing graph state:" + JSON.stringify(graph)); //TEST
             }
             else {
                 alert("Invalid Username/Password Combination");
