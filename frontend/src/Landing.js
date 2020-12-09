@@ -294,11 +294,14 @@ export default class Landing extends Login {
         return (            
             <Container>
                 <Container>
+                    <br></br>
+                    <br></br>
+                    <br></br>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
                     <br></br>
                     <VictoryPie 
                         height={200} 
-                        padding={25}
+                        //padding={50}
                         x='name'
                         y='price'
                         data={JSON.parse(localStorage.getItem('graph'))}
@@ -312,7 +315,7 @@ export default class Landing extends Login {
                             "#590202",
                             "#a7bf50"
                           ]}
-                          style={{ labels: { fill: "white", fontSize: 6 } }}
+                          style={{ labels: { fill: "white", fontSize: 8 } }}
                           
                     >
                     </VictoryPie>

@@ -136,13 +136,27 @@ class SignUp extends Component {
                     username: username,
                     name: name,
                     email: email,
-                    password: password1
+                    password: password1,
+                    user_budget: `[
+                        {
+                            "budget_category": "Default Budget",
+                            "budget_expense": [
+                                {
+                                    "expense_category": "Incidental",
+                                    "expense_name": "Default Expense",
+                                    "expense_cost": "10"
+                                }
+                            ]
+                        }
+                    ]`
                   })
         })
         .then((res) => res.json())
         .then((d) => {
             this.setState({ data: d });
             console.log(this.state.data);
+            window.history.pushState(this.state, null, '/Login');
+            window.location.reload(false);
         });
     }
 

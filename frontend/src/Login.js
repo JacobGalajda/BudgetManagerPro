@@ -185,7 +185,7 @@ class Login extends Component {
                             <Nav.Link href="signUp">Sign Up</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href="forgotPassword"> Forgot Password</Nav.Link>
+                            <Nav.Link href="forgotPassword">Forgot Password</Nav.Link>
                         </Nav.Item>
                     </Nav>
                     </form>
