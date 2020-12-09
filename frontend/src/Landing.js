@@ -151,24 +151,102 @@ const commands = {
             const option = args[1];
             const value = args[2];
 
+            var i = 0;
+            var temp;
+            for(i = 0; i < userdata.user.user_budgets[0].budget_expense.length; i++) {
+                if(userdata.user.user_budgets[0].budget_expense[i].expense_name === iten_name) {
+                    break;
+                }
+            }
+            if(i >= userdata.user.user_budgets[0].budget_expense.length) {
+                return `Could not find expense.` //POSSIBLY CHANGE
+            }
+
             // TODO() Update Name, Price, Category API
             if (option === 'name') {
-                var i = 0;
-                var temp;
-                for(i = 0; i < userdata.user.user_budgets[0].budget_expense.length; i++) {
-                    if(userdata.user.user_budgets[0].budget_expense[i].expense_name === iten_name) {
-                        break;
-                    }
-                }
-                if(i >= userdata.user.user_budgets[0].budget_expense.length) {
-                    return `Could not find expense.` //POSSIBLY CHANGE
-                }
-                
                 userdata.user.user_budgets[0].budget_expense[i].expense_name = value;
+            }
+            else if (option === 'price') {
+                userdata.user.user_budgets[0].budget_expense[i].expense_cost = value;
+            }
+            else if (option === 'category') {
+                userdata.user.user_budgets[0].budget_expense[i].expense_category = value;
+            }
+            else {
+                return `ERROR: Select name, price or category to edit`
+            }
 
-                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}` + "/budgets/" + `${userdata.user.user_budgets[0]._id}`, 
+            // Single API call
+            fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}` + "/budgets/" + `${userdata.user.user_budgets[0]._id}`, 
+            {
+                method: "PUT",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + `${userdata.token}`
+                    },
+                    body: JSON.stringify(userdata.user.user_budgets[0])
+            })
+            .then((res) => res.json())
+            .then((d) => {
+                localStorage.setItem('data', d);
+                //var temp = JSON.parse(localStorage.getItem(d));
+                //console.log(temp);
+                //window.location.reload(false);
+            }).catch(err => console.log(err)).finally(() => {return `Expense updated successfully.`} );
+
+            return `Expense updated successfully.`
+        }
+    },
+    delete: {
+        fn: args => {
+            if (Object.keys(args).length < 1) {
+                return `SYNTAX: delete <ITEM_NAME>
+                        Enter an item to delete from the budget`
+            }
+
+            const item_name = args[0];
+            var i = 0;
+            for(i = 0; i < userdata.user.user_budgets[0].budget_expense.length; i++) {
+                if(userdata.user.user_budgets[0].budget_expense[i].expense_name === item_name) {
+                    break;
+                }
+            }
+            if(i >= userdata.user.user_budgets[0].budget_expense.length) {
+                return `Could not find expense to delete.` //POSSIBLY CHANGE
+            }
+
+            userdata.user.user_budgets[0].budget_expense.splice(i, 1);
+
+            fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}` + "/budgets/" + `${userdata.user.user_budgets[0]._id}`, 
+            {
+                method: "PUT",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + `${userdata.token}`
+                    },
+                    body: JSON.stringify(userdata.user.user_budgets[0])
+            })
+            .then((res) => res.json())
+            .then((d) => {
+                localStorage.setItem('data', d);
+                //var temp = JSON.parse(localStorage.getItem(d));
+                //console.log(temp);
+                //window.location.reload(false);
+            }).catch(err => console.log(err)).finally(() => {return `Expense deleted successfully.`} );
+
+            return `Expense deleted successfully.`
+        }
+    },
+    burn_account: {
+        fn: args=> {
+            if (window.confirm("WARNING: Are you sure you would like to burn your account?")) {
+                userdata.user = null;
+                userdata.token = null;
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${userdata.user._id}`, 
                 {
-                    method: "PUT",
+                    method: "DELETE",
                         headers: {
                             Accept: "application/json",
                             "Content-Type": "application/json",
@@ -182,35 +260,11 @@ const commands = {
                     //var temp = JSON.parse(localStorage.getItem(d));
                     //console.log(temp);
                     //window.location.reload(false);
-                }).catch(err => console.log(err)).finally(() => {return `Expense updated successfully.`} );
+                }).catch(err => console.log(err)).finally(() => {return `Account deleted successfully.`} );
+                // JACOB DO YOUR STUFF BELOW HERE
 
-                return `Expense updated successfully.`
-            }
-            else if (option === 'price') {
-                alert('Editing Item Price');
-            }
-            else if (option === 'category') {
-                alert('Editing Item Category');
-            }
 
-            return `ERROR: Select name, price or category to edit`
-        }
-    },
-    delete: {
-        fn: args => {
-            if (Object.keys(args).length < 1) {
-                return `SYNTAX: delete <ITEM_NAME>
-                        Enter an item to delete from the budget`
-            }
-
-            const item_name = args[0];
-            alert("Deleting Item");
-        }
-    },
-    burn_account: {
-        fn: args=> {
-            if (window.confirm("WARNING: Are you sure you would like to burn your account?")) {
-                alert("Burning Account");
+                return `Account deleted successfully.`
             }
             else {
                 alert("Burn cancelled.");
@@ -218,7 +272,7 @@ const commands = {
             return ``
         }
     }
-  }
+}
 
 export default class Landing extends Login {
     constructor(props) {
