@@ -29,7 +29,7 @@ class Login extends Component {
                   })
         })
         .then(res => res.json())
-        .then(data => this.setState({ data: res }));
+        .then(data => this.setState({ data: json }));
         console.log(this.state.data);
     }
 
