@@ -22,7 +22,7 @@ const commands = {
             return `
             clear
             add <ITEM_NAME> <PRICE> <BUDGET_CATEGORY>
-            edit <name |OR| price |OR| category> <NEW_VALUE>
+            edit <ITEM_NAME> <name |OR| price |OR| category> <NEW_VALUE>
             delete <ITEM_NAME> <REPEAT_ITEM_NAME>
             update_profile <username |OR| password> <NEW_VALUE> <REPEEAT_NEW_VALUE>
             burn_account
