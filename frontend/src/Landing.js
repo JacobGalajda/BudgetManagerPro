@@ -3,7 +3,7 @@ import './index.css';
 import './budgetFormatting.css';
 import Login from './Login.js';
 import React, {Component, useState} from 'react';
-import bootstrap, { Button, Badge, Container, Col, Row, Navbar, Form, FormControl } from 'react-bootstrap';
+import bootstrap, { Alert, Button, Badge, Container, Col, Row, Navbar, Form, FormControl } from 'react-bootstrap';
 import victory, { VictoryPie } from 'victory';
 import CommandLine from 'react-command-line';
 
@@ -102,12 +102,32 @@ const commands = {
     },
     delete: {
         fn: args => {
+            if (Object.keys(args).length < 1) {
+                return `SYNTAX: delete <ITEM_NAME>
+                        Enter an item to delete from the budget`
+            }
+
+            const item_name = args[0];
             alert("Deleting Item");
         }
     },
     burn_account: {
         fn: args=> {
-            alert("Burning Account");
+            alert(
+                "Log Out?",
+                "Are you sure you want to log out?",
+                [
+                  {
+                    text: "No"
+                    // onPress: () => console.log("No Pressed!")
+                  },
+                  {
+                    text: "Yes",
+                    onClick: () => alert("Deleting account")
+                  }
+                ],
+                { cancelable: false }
+              );
         }
     }
   }
@@ -115,6 +135,13 @@ const commands = {
 export default class Landing extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: []
+        }
+    }
+
+    handleClick(e) {
+        alert("Imagine me loggin out....");
     }
 
     render() {
@@ -131,7 +158,7 @@ export default class Landing extends Component {
                         <p className="center">A place to organize finances to ensure that they are within their financial scopes.</p>
                     </div>
                     <div>
-                        <Button variant="outline-danger" onClick={this.logOutButton}>Log Out</Button>
+                        <Button variant="outline-danger" onClick={(e => this.handleClick(e))}>Log Out</Button>
                     </div>
                 </Navbar>
 

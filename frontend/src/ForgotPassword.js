@@ -6,6 +6,19 @@ import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import bootstrap, { Button, Badge, Container, Nav } from 'react-bootstrap';
 
 class ForgotPassword extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            
+        }
+    }
+
+    handleClick(e) {
+        var email = document.getElementById("Email").value;
+        var password = document.getElementById("Password").value;
+
+    }
+
     render() {
         return (
             <div className="center-main">
@@ -21,9 +34,11 @@ class ForgotPassword extends Component {
                     <p id="loginResult"></p>
                     
                     <input type="text" id="Email" placeholder="Email"></input>
-                    <input type="password" id="UserName" placeholder="UserName"></input>
+                    <input type="text" id="UserName" placeholder="UserName"></input>
                     <br></br>
-                    <Button id="ForgotPasswordButton" onclick="">Submit</Button>
+                    <input type="password" id="Password1" placeholder="New Password"></input>
+                    <input type="password" id="Password2" placeholder="Confirm New Password"></input>
+                    <Button id="ForgotPasswordButton" onclick={(e => this.handleClick(e))}>Submit</Button>
                     </form>
                     <Nav className="flex-column">
                         <Nav.Item>

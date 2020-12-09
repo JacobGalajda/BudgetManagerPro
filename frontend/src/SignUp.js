@@ -2,10 +2,25 @@ import './App.css';
 import './index.css'
 import './budgetFormatting.css'
 import React, {Component, useState} from 'react';
-import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import bootsrap, { Button, Badge, Container, Nav } from 'react-bootstrap';
 
 class SignUp extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            
+        }
+    }
+
+    handleClick(e) {
+        var username = document.getElementById("UserName").value;
+        var email = document.getElementById("Email").value;
+        var password1 = document.getElementById("Password1").value;
+        var password2 = document.getElementById("Password2").value;
+
+        alert(username + ', ' + email + ', ' + ', ' + password1 + ', ' + password2);
+    }
+
     render() {
         return (
             <div className="center-main">
@@ -20,11 +35,10 @@ class SignUp extends Component {
                     <form className="box center" action="" method="">
                         <p id="loginResult"></p>
                         <input type="text" id="Email" placeholder="Email"></input>
-                        <input type="text" id="Phone" placeholder="Phone"></input>
                         <input type="text" id="UserName" placeholder="Username"></input>
                         <input type="password" id="Password1" placeholder="Password"></input>
                         <input type="password" id="Password2" placeholder="Confirm Password"></input>
-                        <Button id="SignUpButton" onclick="">Sign Up</Button>
+                        <Button id="SignUpButton" onClick={(e => this.handleClick(e))}>Sign Up</Button>
                     </form>
                     <br></br>
                     <Nav className="flex-column">

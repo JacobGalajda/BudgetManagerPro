@@ -3,9 +3,36 @@ import './index.css'
 import './budgetFormatting.css'
 import React, {Component, useState} from 'react';
 import bootsrap, { Button, Badge, Container, Nav } from 'react-bootstrap';
-import {BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        }
+    }
+
+    handleClick(e) {
+        var email = document.getElementById("Email").value;
+        var password = document.getElementById("Password").value;
+
+        fetch('https://budgetmanagerpro.heroku.app/auth/login', 
+        {
+            method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    email: email,
+                    password: password
+                  })
+        })
+        .then(res => res.json())
+        .then(data => this.setState({ data: res }));
+        console.log(this.state.data);
+    }
+
     render() {
         return (
             <div className="center-main">
@@ -23,7 +50,7 @@ class Login extends Component {
                     <input type="text" id="Email" placeholder="Email"></input>
                     <input type="password" id="Password" placeholder="Password"></input>
                 
-                    <Button id="LoginButton" onclick="">Login</Button>
+                    <Button id="LoginButton" onClick={(e => this.handleClick(e))}>Login</Button>
                     <br></br>
                     <Nav className="flex-column">
                         <Nav.Item>
