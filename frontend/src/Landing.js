@@ -169,7 +169,7 @@ const commands = {
     }
   }
 
-export default class Landing extends Component {
+export default class Landing extends Login {
     constructor(props) {
         super(props);
         this.state = {
