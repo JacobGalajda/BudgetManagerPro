@@ -133,6 +133,7 @@ class ForgotPassword extends Component {
                   body: JSON.stringify({
                     username: username,
                     email: email,
+                    password: password1
                   })
         })
         .then((res) => res.json())
