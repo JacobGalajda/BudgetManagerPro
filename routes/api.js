@@ -62,13 +62,6 @@ router.post('/users', async function(req, res, next) {
     // req.body.user_budgets = [Budget]; // either this
     Users.create(req.body).then(async function(user) {
         try {
-            // await sgMail.send(msg).then((response) => {
-            //     console.log(response);
-            //     res.send({
-            //         success: true,
-            //         message: 'Thank you for registering. Please check your email to verify your account.'             
-            //     });
-            // });        
             const accessToken = await oAuth2Client.getAccessToken();
             
             const transport = nodemailer.createTransport({
@@ -124,7 +117,7 @@ router.get('/verify-email', async (req, res, next) => {
     try {
         const user = await Users.findOne({ emailToken: req.query.token });
         if (!user) {
-            res.status(401).send({
+            res.status(401).send({ //SEND HTML
                 success: false,
                 message: "Token is invalid. Please contact us for assistance."
             });
@@ -133,17 +126,50 @@ router.get('/verify-email', async (req, res, next) => {
         user.verified = true;
         await user.save();
         const html = `
-        <p style="text-align:center">Your account is verified.</p>
-        <button onclick= href='https://budgetmanagerpro.herokuapp.com/';"> Login </button>
+        <!DOCTYPE html>
+        <html lang="en">
+          
+        <head>
+            <title>Budget Manager Pro</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+            <style>
+                body {
+                    background: #68A047;
+                    text-align: center;
+                    margin: auto;
+                    justify-content: center;
+                    width: 60%;
+                }
+                .center {
+                    background: white;
+                    border-radius: 25px;
+                    border: 2px solid black;
+                    width: 40%;
+                    height: 80%;
+                    justify-content: center;
+                }
+            </style>
+        </head>  
+        <body>
+            <div class="center">
+            <h1>Congradulations!</h1>
+            <h3>Your account has been verified!</h3>
+            <br></br>
+            <p>Click this 
+            <a href="https://budgetmanagerpro.herokuapp.com/login">link</a>
+             to login to your new account.</p>
+            <br></br>
+            <p>Your's Truly,</p>
+            <p>BudgetManagerPro Team</p>
+            <div>
+          </body>
+        </html>
         `
         res.send(html);
-        // res.send({
-        //     success: true,
-        //     message: "User verified."
-        // });
     } catch(error) {
         console.log(error);
-        res.status(401).send({
+        res.status(401).send({ //SEND HTML
             success: false,
             message: "Verification failed. Please contact us for assistance."
         });
@@ -151,22 +177,173 @@ router.get('/verify-email', async (req, res, next) => {
 });
 
 // Password reset
-router.get('/password-reset', async function(req, res, next) {
-    try {
-        const msg = {
-            to: req.body.email,
-            from: 'budgetmanagerproapp@gmail.com',
-            subject: 'Budget Manager Pro - Reset your password.',
-            text: 
-            `
-            Hello, 
-            Please copy and paste the link below to reset your password.
-            http//:
-            `
+router.put('/password-reset', async function(req, res, next) {
+    const user = await Users.findOne({email: req.body.email, username: req.body.username});
+    if(!user) {
+        res.status(401).send({
+            success: false,
+            message: 'User does not exist.'
+        });
+    } else 
+    {
+        try {   
+            user.passwordReset = req.body.password;
+            user.passwordToken = crypto.randomBytes(64).toString('hex');
+            await user.save();
+
+            const accessToken = await oAuth2Client.getAccessToken();
+            
+            const transport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    type: 'OAuth2',
+                    user: 'budgetapppro@gmail.com',
+                    clientId: CLIENT_ID,
+                    clientSecret: CLIENT_SECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    accessToken: accessToken
+                }
+            })
+    
+            const mailOptions = {
+                to: req.body.email,
+                from: 'Budget Manager Pro <budgetapppro@gmail.com>',
+                subject: 'Budget Manager Pro - Reset Password',
+                text: 
+                `
+                Hello.
+                Please copy and paste the address below to reset your password.
+                http://${req.headers.host}/api/password-recover?token=${req.body.passwordToken}
+                `
+                ,
+                html: 
+                `
+                <h1> Hello,</h1>
+                <p>We are sorry to hear you lost your password.</p>
+                <p>Please click the link below to reset your password.</p>
+                <a href="http://${req.headers.host}/api/password-recover?token=${req.body.passwordToken}"> Reset your password</a>
+                `
+            }
+    
+            const result = await transport.sendMail(mailOptions);
+            console.log(result);
+            res.send({
+                success: true,
+                message: 'Password reset successfuly. Please check your email to create a new password.'             
+            });
+        } catch(error) {
+            console.log(error);
+            res.status(401).send({
+                success: false,
+                message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
+            });
         }
-    }catch {
-        ;
     }
+});
+
+router.get('/password-recover', async (req, res) => {
+    const user = await Users.findOne({ passwordToken: req.query.token });
+    try {
+        if (!user) {
+            const html = 
+            `
+            <!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <title>Budget Manager Pro</title>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+                <style>
+                    body {
+                        background: #68A047;
+                        text-align: center;
+                        margin: auto;
+                        justify-content: center;
+                        width: 60%;
+                    }
+                    .center {
+                        background: white;
+                        border-radius: 25px;
+                        border: 2px solid black;
+                        width: 40%;
+                        height: 80%;
+                        justify-content: center;
+                    }
+                </style>
+            </head>  
+            <body>
+                <div class="center">
+                <h1>Your token is invalid!</h1>
+                <h3>Please contact us at budgetapppro@gmail.com for help.</h3>
+                <br></br>
+                <p>Click this 
+                <a href="https://budgetmanagerpro.herokuapp.com/login">link</a>
+                to login to your new account.</p>
+                <br></br>
+                <p>Your's Truly,</p>
+                <p>BudgetManagerPro Team</p>
+                <div>
+            </body>
+            </html>
+            `
+
+            res.send(html);
+        }
+        user.passwordToken = null;
+        user.password = user.passwordToken;
+        await user.save();
+
+        const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+          
+        <head>
+            <title>Budget Manager Pro</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+            <style>
+                body {
+                    background: #68A047;
+                    text-align: center;
+                    margin: auto;
+                    justify-content: center;
+                    width: 60%;
+                }
+                .center {
+                    background: white;
+                    border-radius: 25px;
+                    border: 2px solid black;
+                    width: 40%;
+                    height: 80%;
+                    justify-content: center;
+                }
+            </style>
+        </head>  
+        <body>
+            <div class="center">
+            <h1>Congradulations!</h1>
+            <h3>Your password has been reset!</h3>
+            <br></br>
+            <p>Click this 
+            <a href="https://budgetmanagerpro.herokuapp.com/login">link</a>
+             to login to your new account.</p>
+            <br></br>
+            <p>Your's Truly,</p>
+            <p>BudgetManagerPro Team</p>
+            <div>
+          </body>
+        </html>
+        `
+        res.send(html);
+    } catch(error) {
+        console.log(error);
+        res.status(401).send({ //SEND HTML
+            success: false,
+            message: "Verification failed. Please contact us for assistance."
+        });
+    }
+
 });
 
 // API endpoint - update user
@@ -255,7 +432,6 @@ router.put('/users/:id/budgets/:budget_id', verifyToken, function(req, res) {
         if (err) {
             res.send(err);
         };
-
         // return user object to verify change
         res.json(user);
     });

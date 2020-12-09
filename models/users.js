@@ -46,6 +46,19 @@ const UsersSchema = new Schema({
         //required: [true, 'Email field is required']
         default: null
     },
+    passwordToken: {
+        type: String,
+        //required :[true],
+        default: null
+    },
+    username: {
+        type: String,
+        //required: [true, 'Name field is required']
+    },
+    passwordReset: {
+        type: String,
+        //required: [true, 'Password field is required']
+    }
 });
 
 // create new collection modelled after UserSchema
