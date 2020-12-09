@@ -35,7 +35,7 @@ const commands = {
     update_profile: {
         fn: args => {
             if (Object.keys(args).length < 3) {
-                return `SYNTAX: update_profile <USERNAME | PASSWORD> <NEW VALUE> <REPEAT NEW VALUE>
+                return `SYNTAX: update_profile <username | password> <NEW VALUE> <REPEAT NEW VALUE>
                         Select either username or password and the new value twice to confirm.`
             }
 
@@ -49,16 +49,60 @@ const commands = {
                 return `ERROR: New values must match each other`
             }
 
-            // TODO() Update username in API call
             if (option === 'username') {
-                alert("Updating Username");
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${this.state.data.id}`, 
+                {
+                    method: "PUT",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            username: args[1],
+                        })
+                })
+                .then((res) => res.json())
+                .then((d) => {
+                    this.setState({ data: d });
+                    console.log(this.state.data);
+
+                    if (this.state.data.success === false) {
+                        return `Call failed`;
+                    }
+
+                    else if (this.state.data.success) {
+                        window.location.reload(false);
+                    }
+                });
             }
 
-            // TODO() Hash password and send in updateUser API
             if (option === 'password') {
-                alert("Updating Password");
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${this.state.data.user.id}`, 
+                {
+                    method: "PUT",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            password: args[1],
+                        })
+                })
+                .then((res) => res.json())
+                .then((d) => {
+                    this.setState({ data: d });
+                    console.log(this.state.data);
+
+                    if (this.state.data.success === false) {
+                        return `Call failed`;
+                    }
+
+                    else if (this.state.data.success) {
+                        window.location.reload(false);
+                    }
+                });
+                }
             }
-        }
     },
     add: {
         fn: args => {
@@ -141,7 +185,8 @@ export default class Landing extends Component {
     }
 
     handleClick(e) {
-        alert("Imagine me loggin out....");
+        window.history.pushState({}, null, '/Login');
+        window.location.reload(false);
     }
 
     render() {
@@ -200,7 +245,6 @@ export default class Landing extends Component {
                             </div>
                         </div>
                     </div>
-                
                 </Container>
             </Container>
         );
