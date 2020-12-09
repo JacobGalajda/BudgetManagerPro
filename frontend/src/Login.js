@@ -3,6 +3,7 @@ import './index.css'
 import './budgetFormatting.css'
 import React, {Component, useState} from 'react';
 import bootsrap, { Button, Badge, Container, Nav } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 class Login extends Component {
     constructor(props) {
@@ -31,6 +32,17 @@ class Login extends Component {
         .then((res) => res.json())
         .then((d) => this.setState({ data: d }));
         console.log(this.state.data);
+
+        if (this.state.data.verified === false) {
+            alert("Please verify your account first.");
+        }
+
+        else if (this.state.data.success) {
+            return <Redirect to="/Landing"></Redirect>
+        }
+        else {
+            alert("Invalid Username/Password Combination");
+        }
     }
 
     render() {
