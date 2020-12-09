@@ -9,7 +9,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: props.data
         }
     }
 
@@ -30,19 +30,22 @@ class Login extends Component {
                   })
         })
         .then((res) => res.json())
-        .then((d) => this.setState({ data: d }));
-        console.log(this.state.data);
+        .then((d) => {
+            this.setState({ data: d });
+            console.log(this.state.data);
 
-        if (this.state.data.verified === false) {
-            alert("Please verify your account first.");
-        }
+            if (this.state.data.verified === false) {
+                alert("Please verify your account first.");
+            }
 
-        else if (this.state.data.success) {
-            return <Redirect to="/Landing"></Redirect>
-        }
-        else {
-            alert("Invalid Username/Password Combination");
-        }
+            else if (this.state.data.success) {
+                window.history.pushState(this.state, null, '/Landing');
+                window.location.reload(false);
+            }
+            else {
+                alert("Invalid Username/Password Combination");
+            }
+        });
     }
 
     render() {

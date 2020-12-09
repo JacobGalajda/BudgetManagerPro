@@ -9,14 +9,31 @@ class ForgotPassword extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            data: []
         }
     }
 
     handleClick(e) {
         var email = document.getElementById("Email").value;
-        var password = document.getElementById("Password").value;
-
+        var username = document.getElementById("UserName").value;
+        
+        fetch('https://budgetmanagerpro.herokuapp.com/api/password-reset', 
+        {
+            method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    username: username,
+                    email: email,
+                  })
+        })
+        .then((res) => res.json())
+        .then((d) => {
+            this.setState({ data: d });
+            console.log(this.state.data);
+        });
     }
 
     render() {
@@ -35,9 +52,6 @@ class ForgotPassword extends Component {
                     
                     <input type="text" id="Email" placeholder="Email"></input>
                     <input type="text" id="UserName" placeholder="UserName"></input>
-                    <br></br>
-                    <input type="password" id="Password1" placeholder="New Password"></input>
-                    <input type="password" id="Password2" placeholder="Confirm New Password"></input>
                     <Button id="ForgotPasswordButton" onclick={(e => this.handleClick(e))}>Submit</Button>
                     </form>
                     <Nav className="flex-column">
