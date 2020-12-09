@@ -125,7 +125,7 @@ class ForgotPassword extends Component {
 
         fetch('https://budgetmanagerpro.herokuapp.com/api/password-reset', 
         {
-            method: "POST",
+            method: "PUT",
                   headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json"
