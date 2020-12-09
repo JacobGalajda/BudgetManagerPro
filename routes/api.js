@@ -188,7 +188,8 @@ router.put('/password-reset', async function(req, res, next) {
     {
         try {   
             user.passwordReset = req.body.password;
-            user.passwordToken = crypto.randomBytes(64).toString('hex');
+            const passwordToken = crypto.randomBytes(64).toString('hex');
+            user.passwordToken = passwordToken;
             await user.save();
 
             const accessToken = await oAuth2Client.getAccessToken();
@@ -213,7 +214,7 @@ router.put('/password-reset', async function(req, res, next) {
                 `
                 Hello.
                 Please copy and paste the address below to reset your password.
-                http://${req.headers.host}/api/password-recover?token=${req.body.passwordToken}
+                http://${req.headers.host}/api/password-recover?token=${passwordToken}
                 `
                 ,
                 html: 
@@ -221,7 +222,7 @@ router.put('/password-reset', async function(req, res, next) {
                 <h1> Hello,</h1>
                 <p>We are sorry to hear you lost your password.</p>
                 <p>Please click the link below to reset your password.</p>
-                <a href="http://${req.headers.host}/api/password-recover?token=${req.body.passwordToken}"> Reset your password</a>
+                <a href="http://${req.headers.host}/api/password-recover?token=${passwordToken}"> Reset your password</a>
                 `
             }
     
