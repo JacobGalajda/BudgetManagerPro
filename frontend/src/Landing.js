@@ -263,6 +263,8 @@ const commands = {
                 }).catch(err => console.log(err)).finally(() => {return `Account deleted successfully.`} );
                 // JACOB DO YOUR STUFF BELOW HERE
 
+                window.history.pushState(this.state, null, '/Login');
+                window.location.reload(false);
 
                 return `Account deleted successfully.`
             }
