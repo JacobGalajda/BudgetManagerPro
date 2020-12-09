@@ -40,6 +40,7 @@ class Login extends Component {
 
             else if (this.state.data.success) {
                 window.history.pushState(this.state, null, '/Landing');
+                localStorage.setItem('data', JSON.stringify(this.state.data));
                 window.location.reload(false);
             }
             else {

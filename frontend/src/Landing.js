@@ -13,6 +13,7 @@ import CommandLine from 'react-command-line';
  */
 
 // TODO() Tags have been placed where the API needs to be hooked up. The alert() tells what API call is needed
+var userdata = [];
 
 const commands = {
     help: {
@@ -50,7 +51,7 @@ const commands = {
             }
 
             if (option === 'username') {
-                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${this.state.data.id}`, 
+                fetch('https://budgetmanagerpro.herokuapp.com/api/users/' + `${localStorage.getItem('data').user.id}`, 
                 {
                     method: "PUT",
                         headers: {
@@ -63,8 +64,8 @@ const commands = {
                 })
                 .then((res) => res.json())
                 .then((d) => {
-                    this.setState({ data: d });
-                    console.log(this.state.data);
+                    localStorage.setItem('data', d);
+                    var temp = JSON.parse(localStorage.getItem(d));
 
                     if (this.state.data.success === false) {
                         return `Call failed`;
@@ -157,21 +158,13 @@ const commands = {
     },
     burn_account: {
         fn: args=> {
-            alert(
-                "Log Out?",
-                "Are you sure you want to log out?",
-                [
-                  {
-                    text: "No"
-                    // onPress: () => console.log("No Pressed!")
-                  },
-                  {
-                    text: "Yes",
-                    onClick: () => alert("Deleting account")
-                  }
-                ],
-                { cancelable: false }
-              );
+            if (window.confirm("WARNING: Are you sure you would like to burn your account?")) {
+                alert("Burning Account");
+            }
+            else {
+                alert("Burn cancelled.");
+            }
+            return ``
         }
     }
   }
@@ -182,31 +175,13 @@ export default class Landing extends Component {
         this.state = {
             data: props.data
         }
-    }
-
-    handleClick(e) {
-        window.history.pushState({}, null, '/Login');
-        window.location.reload(false);
+        userdata = localStorage.getItem('data');
+        console.log(userdata);
     }
 
     render() {
-        return (
+        return (            
             <Container>
-                <br></br>
-                <br></br>
-                <br></br>
-                <Navbar bg="dark" variant="dark" className="align-me">
-                    <Navbar.Brand href="/login">
-                        Budget Manager Pro
-                    </Navbar.Brand>
-                    <div>
-                        <p className="center">A place to organize finances to ensure that they are within their financial scopes.</p>
-                    </div>
-                    <div>
-                        <Button variant="outline-danger" onClick={(e => this.handleClick(e))}>Log Out</Button>
-                    </div>
-                </Navbar>
-
                 <Container>
                     <h1 className="center">Budget Manager <Badge variant="dark">Pro</Badge></h1>
                     <br></br>
