@@ -28,7 +28,10 @@ const UsersSchema = new Schema({
     },
     user_budgets: {
         type: [Budget.schema],
-        default: []
+        default: [new Budget({
+            budget_name: '',
+            budget_category: 'Personal',
+        })]
 
     },
     created_at: {
