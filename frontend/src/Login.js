@@ -16,7 +16,7 @@ class Login extends Component {
         var email = document.getElementById("Email").value;
         var password = document.getElementById("Password").value;
 
-        fetch('https://budgetmanagerpro.heroku.app/auth/login', 
+        fetch('https://budgetmanagerpro.herokuapp.com/auth/login', 
         {
             method: "POST",
                   headers: {
