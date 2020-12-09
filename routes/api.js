@@ -236,7 +236,7 @@ router.put('/password-reset', async function(req, res, next) {
             console.log(error);
             res.status(401).send({
                 success: false,
-                message: 'Something went wrong. Please contact us at budgetmanagerproapp@gmail.com'
+                message: 'Something went wrong. Please contact us at budgetapppro@gmail.com'
             });
         }
     }
@@ -288,7 +288,6 @@ router.get('/password-recover', async (req, res) => {
             </body>
             </html>
             `
-
             res.send(html);
         }
         user.passwordToken = null;
