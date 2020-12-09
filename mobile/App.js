@@ -29,6 +29,7 @@ class Sign extends React.Component {
   state = {
     email: "",
     phone: "",
+    name: "",
     userName: "",
     password: "",
     confirmPassword: ""
@@ -57,8 +58,17 @@ class Sign extends React.Component {
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
-            placeholder="UserName"
+            placeholder="Name (First and Last)"
             placeholderTextColor="#003f5c"
+            onChangeText={text => this.setState({ name: text })}
+          />
+        </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="UserName"
+            placeholderTextColor="#003asdf5c"
             onChangeText={text => this.setState({ userName: text })}
           />
         </View>
@@ -99,8 +109,8 @@ class Sign extends React.Component {
                   },
                   body: JSON.stringify({
                     email: this.state.email,
-                    phone: this.state.phone,
-                    userName: this.state.userName,
+                    name: this.state.name,
+                    username: this.state.userName,
                     password: this.state.password
                   })
                 }
@@ -112,8 +122,6 @@ class Sign extends React.Component {
             } else {
               Alert.alert("Error", "Passwords do not match");
             }
-            // console.log(this.state.password);
-            // console.log(this.state.confirmPassword);
           }}
         >
           <Text style={styles.SignUp2}>Sign Up</Text>
@@ -224,7 +232,7 @@ function ProfileScreen({ route, navigation }) {
   // console.log("parent params", parentState.routes[parentState.index].params);
   const user = parentState.routes[parentState.index].params;
   // console.log("\n\n\n:::::Testing: " + user.email);
-
+  console.log("User: " + JSON.stringify(user));
   return (
     <ScrollView>
       <View style={styles.header}></View>
@@ -232,16 +240,16 @@ function ProfileScreen({ route, navigation }) {
       <View style={styles.body}>
         <View style={styles.bodyContent}>
           <View style={styles.buttonContainer}>
-            <Text>{user.paramKeys.name}</Text>
+            <Text>You're a Pro Budget Manager!</Text>
           </View>
           <View style={styles.buttonContainer}>
-            <Text>{user.email}</Text>
+            <Text>Name: {user.paramKeys.name}</Text>
           </View>
           <View style={styles.buttonContainer}>
-            <Text>{user.password}</Text>
+            <Text>Email: {user.email}</Text>
           </View>
-          <View style={styles.buttonContainerPhone}>
-            <Text>Fuck this project!!</Text>
+          <View style={styles.buttonContainer}>
+            <Text>Username: {user.paramKeys.username}</Text>
           </View>
         </View>
       </View>
@@ -608,7 +616,7 @@ function ManageScreen({ navigation }) {
           // forceUpdateHandler();
           // reRender();
         }}
-        title="add to budget"
+        title="add to todays budget"
         color="#68A047"
       />
 
@@ -762,8 +770,6 @@ function useForceUpdate() {
 
 function homeScreen({ navigation, route }) {
   //const forceUpdate = useForceUpdate();
-  var ctr = 0; // test
-  console.log("Im in here"); // test
   var pieData;
   const parentState = navigation.dangerouslyGetParent().dangerouslyGetState();
   const [pie, setPie] = useState([]);
@@ -790,13 +796,6 @@ function homeScreen({ navigation, route }) {
     })
       .then(response => response.json())
       .then(responseJson => {
-        console.log(
-          "Expense name::: " + responseJson[0].budget_expense[0].expense_name
-        );
-        console.log(
-          "Expense cost::: " + responseJson[0].budget_expense[0].expense_cost
-        );
-        console.log("ctr is fucking high: " + ctr++); // remove later
         if (responseJson != null) {
           let data = []; // EMPTY JSON ARRAY
           let expenseLength = responseJson[0].budget_expense.length; //logging array length to see if it works
@@ -832,7 +831,11 @@ function homeScreen({ navigation, route }) {
         <Header />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <Text style={styles.Welcome}> Welcome Back!</Text>
+            <Text style={styles.Welcome}>
+              {" "}
+              Welcome Back!{"\n   "}
+              {user.paramKeys.name}!
+            </Text>
             <Home />
             <Text style={styles.Current}>Current Monthly Spending: </Text>
             <Text style={styles.Budget}>${cost}</Text>
