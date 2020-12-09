@@ -292,7 +292,7 @@ router.get('/password-recover', async (req, res) => {
             res.send(html);
         }
         user.passwordToken = null;
-        user.password = user.passwordToken;
+        user.password = user.passwordReset;
         await user.save();
 
         const html = `
